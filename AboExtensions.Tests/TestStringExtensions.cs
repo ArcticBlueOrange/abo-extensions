@@ -68,7 +68,7 @@ public class TestStringExtensions
     [Theory]
     [InlineData("Ciao mondo", 7, "Ciao...")]
     [InlineData("Ciao", 7, "Ciao")]
-    [InlineData("Ciao", 4, "C...")]
+    [InlineData("Ciao!", 4, "C...")]
     [InlineData("Hi", 4, "Hi")]
     [InlineData("", 4, "")]
     [InlineData(null, 4, null)]
