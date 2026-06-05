@@ -73,6 +73,27 @@ new[] { "a", "b", "c" }.StringJoin(", ")    // → "a, b, c"
 "api/users".RemoveFirstChar('/')     // → "api/users" (invariato)
 ```
 
+### Liste (`AboExtensions.Lists`)
+
+```csharp
+using AboExtensions.Lists;
+```
+
+**`None`** — il contrario di `Any`: restituisce `true` se nessun elemento soddisfa il predicato:
+
+```csharp
+new[] { 1, 2, 3 }.None(x => x > 10)    // → true
+new[] { 1, 2, 3 }.None(x => x > 2)     // → false
+```
+
+**`IsNullOrEmpty`** — controlla se una collezione è nulla o vuota:
+
+```csharp
+((IEnumerable<int>?)null).IsNullOrEmpty()    // → true
+Array.Empty<int>().IsNullOrEmpty()           // → true
+new[] { 1 }.IsNullOrEmpty()                 // → false
+```
+
 ### Numeri (`AboExtensions.Numbers`)
 
 ```csharp
