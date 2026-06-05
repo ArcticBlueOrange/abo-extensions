@@ -2,7 +2,7 @@
 
 namespace AboExtensions.Reflections;
 
-public static class Reflections
+public static class ReflectionExtensions
 {
     public static object GetPropertyByName(this object o, string property)
     {
