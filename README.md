@@ -73,6 +73,35 @@ new[] { "a", "b", "c" }.StringJoin(", ")    // → "a, b, c"
 "api/users".RemoveFirstChar('/')     // → "api/users" (invariato)
 ```
 
+### Numeri (`AboExtensions.Numbers`)
+
+```csharp
+using AboExtensions.Numbers;
+```
+
+**`Or`** — valore di default per `float?` nullable:
+
+```csharp
+float? valore = null;
+valore.Or()       // → 0f
+valore.Or(99f)    // → 99f
+```
+
+**`Round`** — arrotondamento con numero di decimali, su `double` e `decimal`:
+
+```csharp
+3.14159.Round(2)          // → 3.14
+2.555m.Round(2)           // → 2.56
+```
+
+**`IsNanOrInf`** / **`IsNotNanNorInf`** — controlli su valori float anomali:
+
+```csharp
+float.NaN.IsNanOrInf()           // → true
+float.PositiveInfinity.IsNanOrInf()  // → true
+3.14f.IsNotNanNorInf()           // → true
+```
+
 ## Requisiti
 
 - .NET 8.0+
