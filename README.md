@@ -94,6 +94,29 @@ Array.Empty<int>().IsNullOrEmpty()           // → true
 new[] { 1 }.IsNullOrEmpty()                 // → false
 ```
 
+### Reflection (`AboExtensions.Reflections`)
+
+```csharp
+using AboExtensions.Reflections;
+```
+
+**`GetPropertyByName`** — legge il valore di una proprietà per nome:
+
+```csharp
+var persona = new { Nome = "Mario", Età = 30 };
+persona.GetPropertyByName("Nome")    // → "Mario"
+persona.GetPropertyByName("Età")     // → 30
+```
+
+**`GetPropertiesToString`** — concatena i valori di più proprietà in una stringa:
+
+```csharp
+var persona = new { Nome = "Mario", Cognome = "Rossi" };
+ReflectionExtensions.GetPropertiesToString(persona, "Nome,Cognome")           // → "Mario Rossi"
+ReflectionExtensions.GetPropertiesToString(persona, "Nome,Cognome", outSep: '-')  // → "Mario-Rossi"
+ReflectionExtensions.GetPropertiesToString(persona, "Nome;Cognome", inSep: ';')   // → "Mario Rossi"
+```
+
 ### Numeri (`AboExtensions.Numbers`)
 
 ```csharp
