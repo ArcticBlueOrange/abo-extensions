@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Title>ArcticBlueOrange - Common Extensions</Title>
-    <VersionPrefix>0.0.1-alpha</VersionPrefix>
-    <Version>$(VersionPrefix)</Version>
-    <Authors>ArcticBlueOrange</Authors>
-    <Description>Collection of common use utility functions</Description>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Title>ArcticBlueOrange - Common Extensions</Title>
+		<VersionPrefix>0.0.1-alpha</VersionPrefix>
+		<Version>$(VersionPrefix)</Version>
+		<Authors>ArcticBlueOrange</Authors>
+		<Description>Collection of common use utility functions</Description>
+		<PackageId>AboExtensions</PackageId>
+		<RepositoryUrl>https://github.com/ArcticBlueOrange/abo-extensions</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
 </Project>
