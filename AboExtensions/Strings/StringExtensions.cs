@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace AboExtensions.Strings;
 
@@ -59,5 +54,4 @@ public static class StringExtensions
         if (s.StartsWith(c)) return s[1..];
         return s;
     }
-
 }
