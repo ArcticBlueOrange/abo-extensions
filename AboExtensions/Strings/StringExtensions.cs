@@ -4,16 +4,48 @@ namespace AboExtensions.Strings;
 
 public static class StringExtensions
 {
+    /// <summary>
+    /// Shortcut for string.IsNullOrWhiteSpace(s)
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? s) =>
         string.IsNullOrWhiteSpace(s);
+    /// <summary>
+    /// Shortcut for !string.IsNullOrWhiteSpace(s)
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     public static bool IsNotNullOrWhiteSpace([NotNullWhen(true)] this string? s) =>
         !string.IsNullOrWhiteSpace(s);
+    /// <summary>
+    /// Shortcut for string.IsNullOrEmpty(s)
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     public static bool IsNullOrEmpty([NotNullWhen(false)] this string? s) =>
         string.IsNullOrEmpty(s);
+    /// <summary>
+    /// Shortcut for !string.IsNullOrEmpty(s)
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     public static bool IsNotNullOrEmpty([NotNullWhen(true)] this string? s) =>
         !string.IsNullOrEmpty(s);
+    /// <summary>
+    /// Trims the same characters  at the start and end
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="c"></param>
+    /// <returns></returns>
     public static string TrimStartEnd(this string s, char c = ' ') =>
         s.TrimStart(c).TrimEnd(c);
+    /// <summary>
+    /// Extension method for string.Join()
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="sep"></param>
+    /// <returns></returns>
     public static string StringJoin(this IEnumerable<object> s, string sep) =>
         string.Join(sep, s);
     public static string? OrElse(this string? s, string? fallback, bool alsows = true)
@@ -26,6 +58,12 @@ public static class StringExtensions
 
         return s;
     }
+    /// <summary>
+    /// Removes characters outside of the string 'only'
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="only"></param>
+    /// <returns></returns>
     public static string CharOnly(this string? s, string only)
     {
         if (s == null)
@@ -38,9 +76,25 @@ public static class StringExtensions
 
         return _out;
     }
+    /// <summary>
+    /// Removes not-numerical chars
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     public static string NumOnly(this string s) => s.CharOnly("0123456789");
 
+    /// <summary>
+    /// True if the string is a valid number
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     public static bool IsNumeric(this string text) => double.TryParse(text, out _);
+    /// <summary>
+    /// Crops a string and adds "..." at the end
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
     public static string Ellipsify(this string s, int max = 4)
     {
         if (string.IsNullOrEmpty(s))
@@ -49,6 +103,12 @@ public static class StringExtensions
             return "...";
         return s.Length <= max ? s : s[..(max - 3)] + "...";
     }
+    /// <summary>
+    /// Remove first character if equals to c
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="c"></param>
+    /// <returns></returns>
     public static string RemoveFirstChar(this string s, char c)
     {
         if (s.StartsWith(c)) return s[1..];
@@ -101,5 +161,18 @@ public static class StringExtensions
         var pascal = s.ToPascalCase();
         if (string.IsNullOrEmpty(pascal)) return pascal;
         return char.ToLower(pascal[0]) + pascal[1..];
+    }
+    /// <summary>
+    /// Simple valid email checker (not regex)
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static bool IsEmail(this string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return false;
+        var at = s.IndexOf('@');
+        if (at <= 0 || at == s.Length - 1) return false;
+        var dot = s.LastIndexOf('.');
+        return dot > at + 1 && dot < s.Length - 1;
     }
 }

@@ -155,4 +155,18 @@ public class TestStringExtensions
     [InlineData("", "")]
     public void TestToCamelCase(string input, string expected) =>
         Assert.Equal(expected, input.ToCamelCase());
+
+    [Theory]
+    [InlineData("user@example.com", true)]
+    [InlineData("user.name+tag@sub.domain.org", true)]
+    [InlineData("noatsign", false)]
+    [InlineData("@nodomain.com", false)]
+    [InlineData("user@", false)]
+    [InlineData("user@nodot", false)]
+    [InlineData("user@.com", false)]
+    [InlineData("user@domain.", false)]
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void TestIsEmail(string? input, bool expected) =>
+        Assert.Equal(expected, input.IsEmail());
 }
