@@ -176,6 +176,35 @@ public static class StringExtensions
         return dot > at + 1 && dot < s.Length - 1;
     }
 
+    // TODO: NormalizeWhitespace(this string s) : string
+    //   Descrizione: collassa sequenze di spazi/tab/newline consecutivi in un singolo spazio,
+    //   e fa trim agli estremi.
+    //   Esempi: "hello   world".NormalizeWhitespace()  → "hello world"
+    //           "  a  b  c  ".NormalizeWhitespace()   → "a b c"
+    //           "a\t\tb".NormalizeWhitespace()         → "a b"
+
+    // TODO: Reverse(this string s) : string
+    //   Descrizione: restituisce la stringa con i caratteri in ordine inverso.
+    //   Esempi: "hello".Reverse() → "olleh"
+    //           "".Reverse()      → ""
+    //           "a".Reverse()     → "a"
+
+    // TODO: CountOccurrences(this string s, string substring) : int
+    //   Descrizione: conta quante volte substring appare in s (non sovrapposto).
+    //   Parametri: substring — la sottostringa da cercare.
+    //   Esempi: "abcabc".CountOccurrences("bc") → 2
+    //           "aaaa".CountOccurrences("aa")   → 2  (non sovrapposto)
+    //           "hello".CountOccurrences("x")   → 0
+
+    // TODO: PadBoth(this string s, int width, char c = ' ') : string
+    //   Descrizione: centra la stringa aggiungendo padding simmetrico. Se il padding
+    //   totale è dispari, il carattere extra va a destra.
+    //   Parametri: width — larghezza totale desiderata; c — carattere di padding (default ' ').
+    //   Esempi: "hi".PadBoth(6)      → "  hi  "
+    //           "hi".PadBoth(5)      → "  hi " (extra a destra)
+    //           "hi".PadBoth(6, '-') → "--hi--"
+    //           "toolong".PadBoth(4) → "toolong" (invariato se già più lunga)
+
     // TODO: ContainsAny(this string s, params string[] values) : bool
     //   Descrizione: true se la stringa contiene almeno uno dei valori passati.
     //   Parametri: values — uno o più valori da cercare.
