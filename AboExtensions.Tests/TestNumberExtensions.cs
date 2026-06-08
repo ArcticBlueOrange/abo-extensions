@@ -87,4 +87,47 @@ public class TestNumberExtensions
     [InlineData(5.0, 0.0, 0.0)]
     public void TestPercentage(double part, double total, double expected) =>
         Assert.Equal(expected, part.Percentage(total));
+
+    [Theory]
+    [InlineData(null, 0.0)]
+    [InlineData(3.14, 3.14)]
+    public void TestDoubleOrDefault(double? input, double expected) =>
+        Assert.Equal(expected, input.Or());
+
+    [Fact]
+    public void TestDoubleOrFallback() => Assert.Equal(9.9, ((double?)null).Or(9.9));
+
+    [Theory]
+    [InlineData(-5, 5)]
+    [InlineData(5, 5)]
+    [InlineData(0, 0)]
+    public void TestIntAbs(int input, int expected) =>
+        Assert.Equal(expected, input.Abs());
+
+    [Theory]
+    [InlineData(-3.14, 3.14)]
+    [InlineData(3.14, 3.14)]
+    [InlineData(0.0, 0.0)]
+    public void TestDoubleAbs(double input, double expected) =>
+        Assert.Equal(expected, input.Abs());
+
+    [Theory]
+    [InlineData(5, 1, 10, true, true)]
+    [InlineData(1, 1, 10, true, true)]
+    [InlineData(10, 1, 10, true, true)]
+    [InlineData(0, 1, 10, true, false)]
+    [InlineData(11, 1, 10, true, false)]
+    [InlineData(1, 1, 10, false, false)]
+    [InlineData(10, 1, 10, false, false)]
+    [InlineData(5, 1, 10, false, true)]
+    public void TestIntIsBetween(int input, int min, int max, bool inclusive, bool expected) =>
+        Assert.Equal(expected, input.IsBetween(min, max, inclusive));
+
+    [Theory]
+    [InlineData(5.0, 1.0, 10.0, true, true)]
+    [InlineData(1.0, 1.0, 10.0, true, true)]
+    [InlineData(1.0, 1.0, 10.0, false, false)]
+    [InlineData(5.0, 1.0, 10.0, false, true)]
+    public void TestDoubleIsBetween(double input, double min, double max, bool inclusive, bool expected) =>
+        Assert.Equal(expected, input.IsBetween(min, max, inclusive));
 }

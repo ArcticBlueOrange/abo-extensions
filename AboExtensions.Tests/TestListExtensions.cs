@@ -4,6 +4,24 @@ namespace AboExtensions.Tests;
 
 public class TestListExtensions
 {
+    // ForEach
+
+    [Fact]
+    public void ForEach_InvokesActionForEachElement()
+    {
+        var result = new List<int>();
+        new[] { 1, 2, 3 }.ForEach(result.Add);
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+    }
+
+    [Fact]
+    public void ForEach_EmptySource_DoesNotInvoke()
+    {
+        var called = false;
+        Array.Empty<int>().ForEach(_ => called = true);
+        Assert.False(called);
+    }
+
     // None
 
     [Fact]
