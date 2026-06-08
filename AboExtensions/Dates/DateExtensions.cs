@@ -19,4 +19,6 @@ public static class DateExtensions
         if (birthDate.Date > today.AddYears(-age)) age--;
         return age;
     }
+    public static bool IsInThePast(this DateTime d) => d < DateTime.Now;
+    public static bool IsInTheFuture(this DateTime d) => d > DateTime.Now;
 }

@@ -64,4 +64,20 @@ public class TestDateExtensions
         var birthDate = DateTime.Today.AddYears(-30);
         Assert.Equal(30, birthDate.Age());
     }
+
+    [Fact]
+    public void TestIsInThePast() =>
+        Assert.True(DateTime.Now.AddSeconds(-1).IsInThePast());
+
+    [Fact]
+    public void TestIsInTheFuture() =>
+        Assert.True(DateTime.Now.AddSeconds(1).IsInTheFuture());
+
+    [Fact]
+    public void TestIsInThePast_Future_ReturnsFalse() =>
+        Assert.False(DateTime.Now.AddSeconds(1).IsInThePast());
+
+    [Fact]
+    public void TestIsInTheFuture_Past_ReturnsFalse() =>
+        Assert.False(DateTime.Now.AddSeconds(-1).IsInTheFuture());
 }
