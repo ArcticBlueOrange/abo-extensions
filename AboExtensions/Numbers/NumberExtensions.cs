@@ -1,4 +1,6 @@
-﻿namespace AboExtensions.Numbers;
+﻿using System.Text;
+
+namespace AboExtensions.Numbers;
 
 public static class NumberExtensions
 {
@@ -24,12 +26,14 @@ public static class NumberExtensions
     public static bool IsBetween(this decimal d, decimal min, decimal max, bool inclusive = true) =>
         inclusive ? d >= min && d <= max : d > min && d < max;
 
+    public static bool IsEven(this int i) => (i & 1) == 0;
     // TODO: IsEven(this int i) : bool
     //   Descrizione: true se il numero è pari.
     //   Esempi: 4.IsEven() → true
     //           3.IsEven() → false
     //           0.IsEven() → true
 
+    public static bool IsOdd(this int i) => (i & 1) != 0;
     // TODO: IsOdd(this int i) : bool
     //   Descrizione: true se il numero è dispari. Equivale a !IsEven().
     //   Esempi: 3.IsOdd() → true
@@ -61,6 +65,25 @@ public static class NumberExtensions
     //           "xiv".FromRoman()     → 14  (case-insensitive)
     //           "ABC".FromRoman()     → throw FormatException
 
+    public static string ToOrdinal(this int i)
+    {
+        var s = $"{i}";
+        if (s.EndsWith("11"))
+            s += "th";
+        else if (s.EndsWith("12"))
+            s += "th";
+        else if (s.EndsWith("13"))
+            s += "th";
+        else if (s.EndsWith('1'))
+            s += "st";
+        else if (s.EndsWith('2'))
+            s += "nd";
+        else if (s.EndsWith('3'))
+            s += "rd";
+        else
+            s += "th";
+        return s;
+    }
     // TODO: ToOrdinal(this int i) : string
     //   Descrizione: converte un intero nel corrispondente ordinale in inglese.
     //   Gestisce i casi speciali 11th, 12th, 13th.

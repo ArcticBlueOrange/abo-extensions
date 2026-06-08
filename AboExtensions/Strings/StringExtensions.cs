@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using AboExtensions.StringBuilders;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace AboExtensions.Strings;
 
@@ -183,12 +185,31 @@ public static class StringExtensions
     //           "  a  b  c  ".NormalizeWhitespace()   → "a b c"
     //           "a\t\tb".NormalizeWhitespace()         → "a b"
 
+    public static string Rev(this string s)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        foreach (var c in s)
+            sb.Prepend(c);
+
+        return sb.ToString();
+    }
     // TODO: Reverse(this string s) : string
     //   Descrizione: restituisce la stringa con i caratteri in ordine inverso.
     //   Esempi: "hello".Reverse() → "olleh"
     //           "".Reverse()      → ""
     //           "a".Reverse()     → "a"
 
+    public static int CountOccurrences(this string s, string substr)
+    {
+        int c = 0;
+        while (s.Contains(substr))
+        {
+            c++;
+            s = s.Replace(substr, "");
+        }
+        return c;
+    }
     // TODO: CountOccurrences(this string s, string substring) : int
     //   Descrizione: conta quante volte substring appare in s (non sovrapposto).
     //   Parametri: substring — la sottostringa da cercare.

@@ -2,11 +2,17 @@ namespace AboExtensions.Randoms;
 
 public static class RandomExtensions
 {
+    public static bool NextBool(this Random r) => r.Next(2) == 0;
     // TODO: NextBool(this Random rng) : bool
     //   Descrizione: restituisce true o false con probabilità 50/50.
     //   Equivale a rng.Next(2) == 0.
     //   Esempi: new Random().NextBool()  → true o false
 
+    public static bool NextBool(this Random r, double probability)
+    {
+        var res = r.NextDouble();
+        return res <= probability;
+    }
     // TODO: NextBool(this Random rng, double probability) : bool
     //   Descrizione: restituisce true con la probabilità indicata (0.0–1.0).
     //   Lancia ArgumentOutOfRangeException se probability non è in [0,1].

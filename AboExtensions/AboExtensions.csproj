@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<Title>ArcticBlueOrange - Common Extensions</Title>
-		<VersionPrefix>0.0.5</VersionPrefix>
+		<VersionPrefix>0.0.9</VersionPrefix>
 		<Version>$(VersionPrefix)</Version>
 		<Authors>ArcticBlueOrange</Authors>
 		<Description>Collection of common use utility functions</Description>

@@ -2,7 +2,7 @@ namespace AboExtensions.Dictionaries;
 
 public static class DictionaryExtensions
 {
-    // TODO: GetOrDefault<K,V>(this IReadOnlyDictionary<K,V> d, K key, V defaultValue = default) : V
+    // TODO: GetWithDefault<K,V>(this IReadOnlyDictionary<K,V> d, K key, V defaultValue = default) : V
     //   Descrizione: restituisce il valore associato a key, oppure defaultValue se la chiave
     //   non è presente. Alternativa null-safe a d[key].
     //   Esempi: new Dictionary<string,int>{{"a",1}}.GetOrDefault("a")      → 1
@@ -13,6 +13,11 @@ public static class DictionaryExtensions
     //   Descrizione: aggiunge la coppia chiave/valore se la chiave non esiste,
     //   altrimenti aggiorna il valore esistente. Restituisce il dizionario per il chaining.
     //   Esempi: dict.AddOrUpdate("key", 42)  →  dict["key"] == 42  (sia se nuovo che esistente)
+    public static Dictionary<K, V> AddOrUpdate<K, V>(this Dictionary<K, V> d, K k, V v)
+    {
+        d[k] = v;
+        return d;
+    }
 
     // TODO: Merge<K,V>(this Dictionary<K,V> d, Dictionary<K,V> other,
     //                  bool overwrite = true) : Dictionary<K,V>
@@ -28,10 +33,4 @@ public static class DictionaryExtensions
     //   Lancia ArgumentException se ci sono valori duplicati (non invertibili).
     //   Esempi: new Dictionary<string,int>{{"a",1},{"b",2}}.Invert()
     //               → new Dictionary<int,string>{{1,"a"},{2,"b"}}
-
-    // TODO: IsNullOrEmpty<K,V>(this Dictionary<K,V>? d) : bool
-    //   Descrizione: true se il dizionario è null o non contiene elementi.
-    //   Esempi: ((Dictionary<string,int>?)null).IsNullOrEmpty() → true
-    //           new Dictionary<string,int>().IsNullOrEmpty()    → true
-    //           new Dictionary<string,int>{{"a",1}}.IsNullOrEmpty() → false
 }

@@ -2,6 +2,13 @@ namespace AboExtensions.Exceptions;
 
 public static class ExceptionExtensions
 {
+    public static Exception GetRootCause(this Exception e)
+    {
+        var ret = e;
+        while (ret.InnerException != null)
+            ret = ret.InnerException;
+        return ret;
+    }
     // TODO: GetRootCause(this Exception ex) : Exception
     //   Descrizione: percorre ricorsivamente la catena InnerException e restituisce
     //   l'eccezione più interna (quella senza InnerException).
@@ -9,6 +16,16 @@ public static class ExceptionExtensions
     //               .GetRootCause().Message → "root"
     //           new Exception("no inner").GetRootCause().Message → "no inner"
 
+    public static IEnumerable<Exception> Flatten(this Exception e)
+    {
+        var v = e;
+        yield return v;
+        while (v.InnerException != null)
+        {
+            v = v.InnerException;
+            yield return v;
+        }
+    }
     // TODO: Flatten(this Exception ex) : IEnumerable<Exception>
     //   Descrizione: restituisce tutte le eccezioni nella catena InnerException
     //   come sequenza piatta, a partire da ex fino alla root cause.
