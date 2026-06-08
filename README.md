@@ -48,6 +48,15 @@ var title = input.OrElse("Untitled");
 "C# is great!".ToSlug()     // → "c-is-great"
 ```
 
+**`ToPascalCase`** / **`ToCamelCase`** — converts a phrase (spaces, dashes, any separator) to PascalCase or camelCase:
+
+```csharp
+"hello world".ToPascalCase()    // → "HelloWorld"
+"foo bar baz".ToCamelCase()     // → "fooBarBaz"
+"already-slug".ToPascalCase()   // → "AlreadySlug"
+"UPPER CASE".ToCamelCase()      // → "upperCase"
+```
+
 **`Repeat`** — repeats a string n times:
 
 ```csharp
@@ -84,6 +93,14 @@ var title = input.OrElse("Untitled");
 "abc".IsNumeric()    // → false
 ```
 
+**`IsEmail`** — basic structural email validation (no regex):
+
+```csharp
+"user@example.com".IsEmail()    // → true
+"noatsign".IsEmail()            // → false
+"user@".IsEmail()               // → false
+```
+
 **`TrimStartEnd`** — like `Trim` but for a specific character:
 
 ```csharp
@@ -94,15 +111,6 @@ var title = input.OrElse("Untitled");
 
 ```csharp
 new[] { "a", "b", "c" }.StringJoin(", ")    // → "a, b, c"
-```
-
-**`ToPascalCase`** / **`ToCamelCase`** — converts a phrase (spaces, dashes, any separator) to PascalCase or camelCase:
-
-```csharp
-"hello world".ToPascalCase()    // → "HelloWorld"
-"foo bar baz".ToCamelCase()     // → "fooBarBaz"
-"already-slug".ToPascalCase()   // → "AlreadySlug"
-"UPPER CASE".ToCamelCase()      // → "upperCase"
 ```
 
 **`RemoveFirstChar`** — removes the first character if it matches the given one:
@@ -116,6 +124,12 @@ new[] { "a", "b", "c" }.StringJoin(", ")    // → "a, b, c"
 
 ```csharp
 using AboExtensions.Lists;
+```
+
+**`ForEach`** — executes an action for each element of any `IEnumerable` (LINQ doesn't have this):
+
+```csharp
+new[] { 1, 2, 3 }.ForEach(x => Console.WriteLine(x));
 ```
 
 **`None`** — the opposite of `Any`: returns `true` if no element satisfies the predicate:
@@ -133,27 +147,17 @@ Array.Empty<int>().IsNullOrEmpty()           // → true
 new[] { 1 }.IsNullOrEmpty()                 // → false
 ```
 
-### Reflection (`AboExtensions.Reflections`)
+**`Batch`** — splits a sequence into chunks of the given size; the last batch may be smaller:
 
 ```csharp
-using AboExtensions.Reflections;
+new[] { 1, 2, 3, 4, 5 }.Batch(2)   // → [[1,2], [3,4], [5]]
+new[] { 1, 2 }.Batch(10)            // → [[1,2]]
 ```
 
-**`GetPropertyByName`** — reads a property value by name:
+**`Shuffle`** — returns a new shuffled list (Fisher-Yates), does not mutate the original:
 
 ```csharp
-var person = new { Name = "Mario", Age = 30 };
-person.GetPropertyByName("Name")    // → "Mario"
-person.GetPropertyByName("Age")     // → 30
-```
-
-**`GetPropertiesToString`** — concatenates multiple property values into a string:
-
-```csharp
-var person = new { FirstName = "Mario", LastName = "Rossi" };
-ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName")              // → "Mario Rossi"
-ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName", outSep: '-') // → "Mario-Rossi"
-ReflectionExtensions.GetPropertiesToString(person, "FirstName;LastName", inSep: ';')  // → "Mario Rossi"
+new List<int> { 1, 2, 3, 4, 5 }.Shuffle()   // → e.g. [3, 1, 5, 2, 4]
 ```
 
 ### Numbers (`AboExtensions.Numbers`)
@@ -162,32 +166,42 @@ ReflectionExtensions.GetPropertiesToString(person, "FirstName;LastName", inSep: 
 using AboExtensions.Numbers;
 ```
 
-**`Or`** — default value for nullable `float?` and `int?`:
+**`Or`** — default value for nullable numbers (`float?`, `int?`, `double?`, `decimal?`):
 
 ```csharp
-float? f = null;
-f.Or()       // → 0f
-f.Or(99f)    // → 99f
-
-int? i = null;
-i.Or()       // → 0
-i.Or(99)     // → 99
+float? f = null;   f.Or()      // → 0f
+int? i = null;     i.Or(99)    // → 99
+double? d = null;  d.Or()      // → 0.0
+decimal? m = null; m.Or(9.9m)  // → 9.9m
 ```
 
 **`Clamp`** — constrains a value within a min/max range, for `int`, `double`, and `decimal`:
 
 ```csharp
-15.Clamp(1, 10)      // → 10
-0.Clamp(1, 10)       // → 1
-5.Clamp(1, 10)       // → 5
-5.0.Clamp(1.0, 10.0) // → 5.0
+15.Clamp(1, 10)       // → 10
+0.Clamp(1, 10)        // → 1
+5.0.Clamp(1.0, 10.0)  // → 5.0
+```
+
+**`IsBetween`** — range check, inclusive by default:
+
+```csharp
+5.IsBetween(1, 10)              // → true
+1.IsBetween(1, 10)              // → true  (inclusive)
+1.IsBetween(1, 10, inclusive: false)  // → false (exclusive)
+```
+
+**`Abs`** — absolute value as an extension, for `int` and `double`:
+
+```csharp
+(-5).Abs()     // → 5
+(-3.14).Abs()  // → 3.14
 ```
 
 **`Percentage`** — calculates what percentage `part` is of `total`:
 
 ```csharp
 50.0.Percentage(200.0)    // → 25.0
-1.0.Percentage(4.0)       // → 25.0
 5.0.Percentage(0.0)       // → 0.0  (safe division by zero)
 ```
 
@@ -236,7 +250,7 @@ new DateTime(2024, 1, 10).StartOfWeek(DayOfWeek.Sunday)    // Wednesday → 2024
 **`Age`** — calculates completed years from a birth date to today:
 
 ```csharp
-new DateTime(1990, 6, 15).Age()   // → 34  (if today is 2024-06-15 or later)
+new DateTime(1990, 6, 15).Age()   // → 35  (as of 2025)
 ```
 
 **`IsInThePast`** / **`IsInTheFuture`** — checks whether a date is before or after the current moment:
@@ -246,19 +260,25 @@ DateTime.Now.AddSeconds(-1).IsInThePast()    // → true
 DateTime.Now.AddSeconds(1).IsInTheFuture()   // → true
 ```
 
-### Lists (`AboExtensions.Lists`) — additional
-
-**`Batch`** — splits a sequence into chunks of the given size; the last batch may be smaller:
+**`Quarter`** — returns the quarter of the year (1–4):
 
 ```csharp
-new[] { 1, 2, 3, 4, 5 }.Batch(2)   // → [[1,2], [3,4], [5]]
-new[] { 1, 2 }.Batch(10)            // → [[1,2]]
+new DateTime(2024, 4, 1).Quarter()    // → 2
+new DateTime(2024, 12, 31).Quarter()  // → 4
 ```
 
-**`Shuffle`** — returns a new shuffled list (Fisher-Yates), does not mutate the original:
+**`AddWorkdays`** — adds (or subtracts) n working days, skipping weekends:
 
 ```csharp
-new List<int> { 1, 2, 3, 4, 5 }.Shuffle()   // → e.g. [3, 1, 5, 2, 4]
+new DateTime(2024, 1, 5).AddWorkdays(3)    // Friday + 3 workdays → Wednesday 2024-01-10
+new DateTime(2024, 1, 10).AddWorkdays(-3)  // Wednesday - 3 workdays → Friday 2024-01-05
+```
+
+**`NextWeekday`** — returns the next occurrence of a given day of the week:
+
+```csharp
+new DateTime(2024, 1, 10).NextWeekday(DayOfWeek.Friday)   // Wednesday → 2024-01-12
+new DateTime(2024, 1, 8).NextWeekday(DayOfWeek.Monday)    // Monday → next Monday 2024-01-15
 ```
 
 ### Nullables (`AboExtensions.Nullables`)
@@ -278,6 +298,60 @@ empty.IfNotNull(n => Console.WriteLine(n));  // does nothing
 
 int? score = 42;
 score.IfNotNull(s => Console.WriteLine(s));  // prints "42"
+```
+
+### Booleans (`AboExtensions.Booleans`)
+
+```csharp
+using AboExtensions.Booleans;
+```
+
+**`Toggle`** — returns the opposite boolean value:
+
+```csharp
+true.Toggle()     // → false
+false.Toggle()    // → true
+
+isActive = isActive.Toggle();
+```
+
+### Enums (`AboExtensions.Enums`)
+
+```csharp
+using AboExtensions.Enums;
+```
+
+**`GetValues<T>`** — returns all values of an enum type:
+
+```csharp
+EnumExtensions.GetValues<DayOfWeek>()
+// → [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+
+foreach (var status in EnumExtensions.GetValues<OrderStatus>())
+    Console.WriteLine(status);
+```
+
+### Reflection (`AboExtensions.Reflections`)
+
+```csharp
+using AboExtensions.Reflections;
+```
+
+**`GetPropertyByName`** — reads a property value by name:
+
+```csharp
+var person = new { Name = "Mario", Age = 30 };
+person.GetPropertyByName("Name")    // → "Mario"
+person.GetPropertyByName("Age")     // → 30
+```
+
+**`GetPropertiesToString`** — concatenates multiple property values into a string:
+
+```csharp
+var person = new { FirstName = "Mario", LastName = "Rossi" };
+ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName")              // → "Mario Rossi"
+ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName", outSep: '-') // → "Mario-Rossi"
+ReflectionExtensions.GetPropertiesToString(person, "FirstName;LastName", inSep: ';')  // → "Mario Rossi"
 ```
 
 ## Requirements
