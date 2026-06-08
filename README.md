@@ -206,6 +206,39 @@ float.PositiveInfinity.IsNanOrInf() // → true
 3.14f.IsNotNanNorInf()              // → true
 ```
 
+### Dates (`AboExtensions.Dates`)
+
+```csharp
+using AboExtensions.Dates;
+```
+
+**`IsWeekend`** / **`IsWeekday`** — checks whether the date falls on a weekend or weekday:
+
+```csharp
+new DateTime(2024, 1, 6).IsWeekend()   // Saturday → true
+new DateTime(2024, 1, 8).IsWeekday()   // Monday   → true
+```
+
+**`StartOfDay`** / **`EndOfDay`** — returns midnight or the last tick of the day:
+
+```csharp
+new DateTime(2024, 6, 15, 14, 30, 0).StartOfDay()  // → 2024-06-15 00:00:00.000
+new DateTime(2024, 6, 15, 14, 30, 0).EndOfDay()    // → 2024-06-15 23:59:59.999...
+```
+
+**`StartOfWeek`** — returns the first day of the week containing the date (default: Monday):
+
+```csharp
+new DateTime(2024, 1, 10).StartOfWeek()                    // Wednesday → 2024-01-08 (Monday)
+new DateTime(2024, 1, 10).StartOfWeek(DayOfWeek.Sunday)    // Wednesday → 2024-01-07 (Sunday)
+```
+
+**`Age`** — calculates completed years from a birth date to today:
+
+```csharp
+new DateTime(1990, 6, 15).Age()   // → 34  (if today is 2024-06-15 or later)
+```
+
 ## Requirements
 
 - .NET 8.0+
