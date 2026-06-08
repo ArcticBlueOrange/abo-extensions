@@ -54,4 +54,52 @@ public static class StringExtensions
         if (s.StartsWith(c)) return s[1..];
         return s;
     }
+    public static string Capitalize(this string s, bool keepOthers = false) =>
+        string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + (keepOthers ? s[1..] : s[1..].ToLower());
+    public static string ToSlug(this string s)
+    {
+        var result = new System.Text.StringBuilder();
+        bool prevDash = false;
+        foreach (var c in s.ToLower())
+        {
+            if (char.IsLetterOrDigit(c))
+            {
+                result.Append(c);
+                prevDash = false;
+            }
+            else if (!prevDash && result.Length > 0)
+            {
+                result.Append('-');
+                prevDash = true;
+            }
+        }
+        if (result.Length > 0 && result[^1] == '-')
+            result.Length--;
+        return result.ToString();
+    }
+    public static string Repeat(this string s, int n) =>
+        n <= 0 ? string.Empty : string.Concat(Enumerable.Repeat(s, n));
+    public static string Left(this string s, int n) =>
+        string.IsNullOrEmpty(s) ? s : s[..Math.Min(n, s.Length)];
+    public static string Right(this string s, int n) =>
+        string.IsNullOrEmpty(s) ? s : s[Math.Max(0, s.Length - n)..];
+    public static string ToPascalCase(this string s)
+    {
+        if (string.IsNullOrEmpty(s)) return s;
+        var result = new System.Text.StringBuilder();
+        bool nextUpper = true;
+        foreach (var c in s)
+        {
+            if (!char.IsLetterOrDigit(c)) { nextUpper = true; continue; }
+            result.Append(nextUpper ? char.ToUpper(c) : char.ToLower(c));
+            nextUpper = false;
+        }
+        return result.ToString();
+    }
+    public static string ToCamelCase(this string s)
+    {
+        var pascal = s.ToPascalCase();
+        if (string.IsNullOrEmpty(pascal)) return pascal;
+        return char.ToLower(pascal[0]) + pascal[1..];
+    }
 }

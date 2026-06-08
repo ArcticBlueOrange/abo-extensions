@@ -85,4 +85,74 @@ public class TestStringExtensions
     [InlineData("", 'x', "")]
     public void TestRemoveFirstChar(string input, char c, string expected) =>
         Assert.Equal(expected, input.RemoveFirstChar(c));
+
+    [Theory]
+    [InlineData("hello", "Hello")]
+    [InlineData("WORLD", "World")]
+    [InlineData("hELLO wORLD", "Hello world")]
+    [InlineData("a", "A")]
+    [InlineData("", "")]
+    public void TestCapitalize(string input, string expected) =>
+        Assert.Equal(expected, input.Capitalize());
+
+    [Theory]
+    [InlineData("hELLO wORLD", "HELLO wORLD")]
+    [InlineData("hello", "Hello")]
+    public void TestCapitalizeKeepOthers(string input, string expected) =>
+        Assert.Equal(expected, input.Capitalize(keepOthers: true));
+
+    [Theory]
+    [InlineData("Hello World", "hello-world")]
+    [InlineData("  Ciao   Mondo  ", "ciao-mondo")]
+    [InlineData("C# is great!", "c-is-great")]
+    [InlineData("already-slug", "already-slug")]
+    [InlineData("", "")]
+    public void TestToSlug(string input, string expected) =>
+        Assert.Equal(expected, input.ToSlug());
+
+    [Theory]
+    [InlineData("ab", 3, "ababab")]
+    [InlineData("x", 1, "x")]
+    [InlineData("hi", 0, "")]
+    [InlineData("hi", -1, "")]
+    [InlineData("", 5, "")]
+    public void TestRepeat(string input, int n, string expected) =>
+        Assert.Equal(expected, input.Repeat(n));
+
+    [Theory]
+    [InlineData("hello", 3, "hel")]
+    [InlineData("hi", 10, "hi")]
+    [InlineData("hello", 0, "")]
+    [InlineData("", 3, "")]
+    public void TestLeft(string input, int n, string expected) =>
+        Assert.Equal(expected, input.Left(n));
+
+    [Theory]
+    [InlineData("hello", 3, "llo")]
+    [InlineData("hi", 10, "hi")]
+    [InlineData("hello", 0, "")]
+    [InlineData("", 3, "")]
+    public void TestRight(string input, int n, string expected) =>
+        Assert.Equal(expected, input.Right(n));
+
+    [Theory]
+    [InlineData("hello world", "HelloWorld")]
+    [InlineData("foo bar baz", "FooBarBaz")]
+    [InlineData("already-slug", "AlreadySlug")]
+    [InlineData("  spaces  around  ", "SpacesAround")]
+    [InlineData("UPPER CASE", "UpperCase")]
+    [InlineData("single", "Single")]
+    [InlineData("", "")]
+    public void TestToPascalCase(string input, string expected) =>
+        Assert.Equal(expected, input.ToPascalCase());
+
+    [Theory]
+    [InlineData("hello world", "helloWorld")]
+    [InlineData("foo bar baz", "fooBarBaz")]
+    [InlineData("already-slug", "alreadySlug")]
+    [InlineData("UPPER CASE", "upperCase")]
+    [InlineData("single", "single")]
+    [InlineData("", "")]
+    public void TestToCamelCase(string input, string expected) =>
+        Assert.Equal(expected, input.ToCamelCase());
 }
