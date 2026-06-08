@@ -38,4 +38,12 @@ public static class DateExtensions
         int diff = ((int)day - (int)d.DayOfWeek + 7) % 7;
         return d.Date.AddDays(diff == 0 ? 7 : diff);
     }
+
+    // TODO: WeekNumber(this DateTime d) : int
+    //   Descrizione: restituisce il numero di settimana ISO 8601 (1–53).
+    //   La settimana ISO inizia il lunedì; la prima settimana dell'anno è quella con il primo giovedì.
+    //   Parametri: nessuno oltre alla data.
+    //   Esempi: new DateTime(2024, 1, 1).WeekNumber() → 1
+    //           new DateTime(2024, 12, 30).WeekNumber() → 1  (appartiene alla settimana 1 del 2025)
+    //   Nota: usare ISOWeek.GetWeekOfYear() disponibile in .NET 5+.
 }

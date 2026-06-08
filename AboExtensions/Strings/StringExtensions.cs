@@ -175,4 +175,74 @@ public static class StringExtensions
         var dot = s.LastIndexOf('.');
         return dot > at + 1 && dot < s.Length - 1;
     }
+
+    // TODO: ContainsAny(this string s, params string[] values) : bool
+    //   Descrizione: true se la stringa contiene almeno uno dei valori passati.
+    //   Parametri: values — uno o più valori da cercare.
+    //   Esempi: "hello world".ContainsAny("world", "foo") → true
+    //           "hello".ContainsAny("foo", "bar") → false
+
+    // TODO: ToLines(this string s, bool removeEmpty = false) : IEnumerable<string>
+    //   Descrizione: split per newline (\n, \r\n). Se removeEmpty = true scarta le righe vuote.
+    //   Parametri: removeEmpty — se true ignora le righe vuote (default false).
+    //   Esempi: "a\nb\nc".ToLines() → ["a", "b", "c"]
+    //           "a\n\nb".ToLines(removeEmpty: true) → ["a", "b"]
+
+    // TODO: RemoveAll(this string s, char c) : string
+    //   Descrizione: rimuove tutte le occorrenze del carattere c dalla stringa.
+    //   Parametri: c — il carattere da rimuovere.
+    //   Esempi: "hello world".RemoveAll('l') → "heo word"
+    //           "aaa".RemoveAll('a') → ""
+
+    // TODO: Wrap(this string s, string prefix, string suffix, bool skipIfPresent = true) : string
+    //   Descrizione: aggiunge prefix all'inizio e suffix alla fine della stringa.
+    //   Se skipIfPresent = true (default), non aggiunge prefix se la stringa inizia già
+    //   con esso, e non aggiunge suffix se la stringa finisce già con esso (check indipendenti).
+    //   Parametri: prefix — stringa da preporre; suffix — stringa da appendere;
+    //              skipIfPresent — evita doppio wrap (default true).
+    //   Esempi: "world".Wrap("[", "]")        → "[world]"
+    //           "[world".Wrap("[", "]")        → "[world]"   (prefix già presente)
+    //           "world]".Wrap("[", "]")        → "[world]"   (suffix già presente)
+    //           "[world]".Wrap("[", "]")       → "[world]"   (entrambi già presenti)
+    //           "world".Wrap("[", "]", false)  → "[[world]]" (skipIfPresent disabilitato)
+
+    // TODO: SmartWrap(this string s, string startEnd, bool skipIfPresent = true,
+    //                IReadOnlyDictionary<string, string>? customMappings = null) : string
+    //   Descrizione: wrappa la stringa usando startEnd come apertura e deducendo
+    //   automaticamente la chiusura. Per caratteri con coppia naturale usa la controparte;
+    //   per caratteri simmetrici ripete lo stesso.
+    //   Se skipIfPresent = true (default), controlla che la stringa non inizi/finisca già
+    //   con i caratteri di apertura/chiusura prima di aggiungerli.
+    //   Mappa di chiusura: '[' → ']', '(' → ')', '{' → '}', '<' → '>'
+    //   Simmetrici (stessa chiusura): '"', '\'', '`', '*', '_', '|', '~'
+    //   Parametri: startEnd — stringa di apertura (anche multi-char, es. "<!--");
+    //              skipIfPresent — evita doppio wrap (default true);
+    //              customMappings — override/estensione per-call della mappa built-in.
+    //   Esempi: "ciao".SmartWrap("[")    → "[ciao]"
+    //           "'ciao".SmartWrap("'")   → "'ciao'"   (inizia già con ', non raddoppia)
+    //           "ciao'".SmartWrap("'")   → "'ciao'"   (finisce già con ', non raddoppia)
+    //           "'ciao'".SmartWrap("'")  → "'ciao'"   (invariato)
+    //           "ciao".SmartWrap("'", skipIfPresent: false) → "'ciao'"  (nulla da saltare)
+    //           "'ciao".SmartWrap("'", skipIfPresent: false) → "''ciao'" (raddoppia)
+    //           "ciao".SmartWrap("<!--") → "<!--ciao-->"  (caso speciale HTML)
+    //           "code".SmartWrap("/*", customMappings: new Dictionary<string,string>{["/*"]="*/"})
+    //               → "/*code*/"
+    //   Nota: per stringhe multi-char senza caso speciale, usare Wrap() esplicito.
+    //
+    //   ESTENSIBILITÀ — dizionario globale + override per-call (ibrido):
+    //     - Esporre un dizionario statico pubblico su SmartWrapExtensions (o StringExtensions):
+    //         public static Dictionary<string, string> CustomMappings = new();
+    //       Il consumer lo popola una volta all'avvio dell'app:
+    //         StringExtensions.CustomMappings["/*"] = "*/";
+    //         StringExtensions.CustomMappings["<!--"] = "-->";
+    //       e poi chiama normalmente senza parametri aggiuntivi:
+    //         "code".SmartWrap("/*") → "/*code*/"
+    //     - Il parametro customMappings per-call ha precedenza sul dizionario globale,
+    //       utile per override isolati o contesti multi-tenant.
+    //     - Ordine di risoluzione della chiusura:
+    //         1. customMappings (per-call)
+    //         2. CustomMappings (globale statico)
+    //         3. mappa built-in (char singoli)
+    //     - ATTENZIONE: CustomMappings è stato globale mutabile — documentare che
+    //       le scritture non sono thread-safe; popolare solo durante l'inizializzazione.
 }

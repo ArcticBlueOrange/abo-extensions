@@ -23,5 +23,15 @@ public static class NumberExtensions
         inclusive ? d >= min && d <= max : d > min && d < max;
     public static bool IsBetween(this decimal d, decimal min, decimal max, bool inclusive = true) =>
         inclusive ? d >= min && d <= max : d > min && d < max;
+
+    // TODO: ToOrdinal(this int i) : string
+    //   Descrizione: converte un intero nel corrispondente ordinale in inglese.
+    //   Gestisce i casi speciali 11th, 12th, 13th.
+    //   Esempi: 1.ToOrdinal() → "1st"
+    //           2.ToOrdinal() → "2nd"
+    //           3.ToOrdinal() → "3rd"
+    //           4.ToOrdinal() → "4th"
+    //           11.ToOrdinal() → "11th"
+    //           21.ToOrdinal() → "21st"
 }
 
