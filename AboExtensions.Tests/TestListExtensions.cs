@@ -35,4 +35,69 @@ public class TestListExtensions
     [Fact]
     public void IsNullOrEmpty_NonEmptyList_ReturnsFalse() =>
         Assert.False(new[] { 1 }.IsNullOrEmpty());
+
+    // Batch
+
+    [Fact]
+    public void Batch_EvenSplit()
+    {
+        var result = new[] { 1, 2, 3, 4 }.Batch(2).ToList();
+        Assert.Equal(2, result.Count);
+        Assert.Equal(new[] { 1, 2 }, result[0]);
+        Assert.Equal(new[] { 3, 4 }, result[1]);
+    }
+
+    [Fact]
+    public void Batch_UnevenSplit_LastBatchSmaller()
+    {
+        var result = new[] { 1, 2, 3, 4, 5 }.Batch(2).ToList();
+        Assert.Equal(3, result.Count);
+        Assert.Equal(new[] { 5 }, result[2]);
+    }
+
+    [Fact]
+    public void Batch_SizeGreaterThanList_ReturnsSingleBatch()
+    {
+        var result = new[] { 1, 2 }.Batch(10).ToList();
+        Assert.Single(result);
+        Assert.Equal(new[] { 1, 2 }, result[0]);
+    }
+
+    [Fact]
+    public void Batch_EmptySource_ReturnsEmpty() =>
+        Assert.Empty(Array.Empty<int>().Batch(3));
+
+    [Fact]
+    public void Batch_InvalidSize_Throws() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => new[] { 1 }.Batch(0).ToList());
+
+    // Shuffle
+
+    [Fact]
+    public void Shuffle_ReturnsSameElements()
+    {
+        var list = new List<int> { 1, 2, 3, 4, 5 };
+        var result = list.Shuffle();
+        Assert.Equal(list.OrderBy(x => x), result.OrderBy(x => x));
+    }
+
+    [Fact]
+    public void Shuffle_ReturnsSameCount()
+    {
+        var list = new List<int> { 1, 2, 3, 4, 5 };
+        Assert.Equal(list.Count, list.Shuffle().Count);
+    }
+
+    [Fact]
+    public void Shuffle_DoesNotMutateOriginal()
+    {
+        var list = new List<int> { 1, 2, 3 };
+        var original = list.ToList();
+        list.Shuffle();
+        Assert.Equal(original, list);
+    }
+
+    [Fact]
+    public void Shuffle_EmptyList_ReturnsEmpty() =>
+        Assert.Empty(new List<int>().Shuffle());
 }
