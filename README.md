@@ -239,6 +239,47 @@ new DateTime(2024, 1, 10).StartOfWeek(DayOfWeek.Sunday)    // Wednesday → 2024
 new DateTime(1990, 6, 15).Age()   // → 34  (if today is 2024-06-15 or later)
 ```
 
+**`IsInThePast`** / **`IsInTheFuture`** — checks whether a date is before or after the current moment:
+
+```csharp
+DateTime.Now.AddSeconds(-1).IsInThePast()    // → true
+DateTime.Now.AddSeconds(1).IsInTheFuture()   // → true
+```
+
+### Lists (`AboExtensions.Lists`) — additional
+
+**`Batch`** — splits a sequence into chunks of the given size; the last batch may be smaller:
+
+```csharp
+new[] { 1, 2, 3, 4, 5 }.Batch(2)   // → [[1,2], [3,4], [5]]
+new[] { 1, 2 }.Batch(10)            // → [[1,2]]
+```
+
+**`Shuffle`** — returns a new shuffled list (Fisher-Yates), does not mutate the original:
+
+```csharp
+new List<int> { 1, 2, 3, 4, 5 }.Shuffle()   // → e.g. [3, 1, 5, 2, 4]
+```
+
+### Nullables (`AboExtensions.Nullables`)
+
+```csharp
+using AboExtensions.Nullables;
+```
+
+**`IfNotNull`** — executes an action only if the value is not null, works for both reference types and nullable value types:
+
+```csharp
+string? name = "Mario";
+name.IfNotNull(n => Console.WriteLine(n));   // prints "Mario"
+
+string? empty = null;
+empty.IfNotNull(n => Console.WriteLine(n));  // does nothing
+
+int? score = 42;
+score.IfNotNull(s => Console.WriteLine(s));  // prints "42"
+```
+
 ## Requirements
 
 - .NET 8.0+
