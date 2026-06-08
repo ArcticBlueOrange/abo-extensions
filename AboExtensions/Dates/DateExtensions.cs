@@ -39,19 +39,23 @@ public static class DateExtensions
         return d.Date.AddDays(diff == 0 ? 7 : diff);
     }
 
-    // TODO: IsToday(this DateTime d) : bool
+    public static bool IsToday(this DateTime d) => d.Date == DateTime.Today;
+    // TODO: IsToday(this DateTime d) : bool 
     //   Descrizione: true se la data coincide con oggi (confronta solo la parte Date).
     //   Esempi: DateTime.Today.IsToday()            → true
     //           DateTime.Today.AddDays(1).IsToday() → false
 
+    public static bool IsYesterday(this DateTime d) => d.Date == Yesterday();
     // TODO: IsYesterday(this DateTime d) : bool
     //   Descrizione: true se la data coincide con ieri (confronta solo la parte Date).
     //   Esempi: DateTime.Today.AddDays(-1).IsYesterday() → true
 
+    public static bool IsTomorrow(this DateTime d) => d.Date == Tomorrow();
     // TODO: IsTomorrow(this DateTime d) : bool
     //   Descrizione: true se la data coincide con domani (confronta solo la parte Date).
     //   Esempi: DateTime.Today.AddDays(1).IsTomorrow() → true
 
+    public static bool IsSameDay(this DateTime d, DateTime o) => d.Date == o.Date;
     // TODO: IsSameDay(this DateTime d, DateTime other) : bool
     //   Descrizione: true se d e other hanno la stessa data (anno, mese, giorno),
     //   ignorando la componente oraria.
@@ -70,12 +74,14 @@ public static class DateExtensions
     //   Esempi: new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToUnixTimestamp() → 0
     //           new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToUnixTimestamp() → 1704067200
 
+    public static DateTime Yesterday() => DateTime.Today.AddDays(-1);
     // TODO: Yesterday() : DateTime  [metodo statico su DateExtensions, non extension]
     //   Descrizione: restituisce la data di ieri a mezzanotte, analogo a DateTime.Today.
     //   Non è un extension method ma un metodo statico di convenienza, come DateTime.Today.
     //   Esempi: DateExtensions.Yesterday() → DateTime.Today.AddDays(-1)
     //   Nota: valutare se esporre anche come property statica invece che metodo.
 
+    public static DateTime Tomorrow() => DateTime.Today.AddDays(1);
     // TODO: Tomorrow() : DateTime  [metodo statico su DateExtensions, non extension]
     //   Descrizione: restituisce la data di domani a mezzanotte, analogo a DateTime.Today.
     //   Non è un extension method ma un metodo statico di convenienza, come DateTime.Today.
