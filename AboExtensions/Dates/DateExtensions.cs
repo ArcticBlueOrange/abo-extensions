@@ -21,4 +21,21 @@ public static class DateExtensions
     }
     public static bool IsInThePast(this DateTime d) => d < DateTime.Now;
     public static bool IsInTheFuture(this DateTime d) => d > DateTime.Now;
+    public static int Quarter(this DateTime d) => (d.Month - 1) / 3 + 1;
+    public static DateTime AddWorkdays(this DateTime d, int days)
+    {
+        int step = days < 0 ? -1 : 1;
+        int remaining = Math.Abs(days);
+        while (remaining > 0)
+        {
+            d = d.AddDays(step);
+            if (d.IsWeekday()) remaining--;
+        }
+        return d;
+    }
+    public static DateTime NextWeekday(this DateTime d, DayOfWeek day)
+    {
+        int diff = ((int)day - (int)d.DayOfWeek + 7) % 7;
+        return d.Date.AddDays(diff == 0 ? 7 : diff);
+    }
 }

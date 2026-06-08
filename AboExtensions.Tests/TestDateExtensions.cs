@@ -80,4 +80,43 @@ public class TestDateExtensions
     [Fact]
     public void TestIsInTheFuture_Past_ReturnsFalse() =>
         Assert.False(DateTime.Now.AddSeconds(-1).IsInTheFuture());
+
+    [Theory]
+    [InlineData(1, 1)]
+    [InlineData(3, 1)]
+    [InlineData(4, 2)]
+    [InlineData(6, 2)]
+    [InlineData(7, 3)]
+    [InlineData(9, 3)]
+    [InlineData(10, 4)]
+    [InlineData(12, 4)]
+    public void TestQuarter(int month, int expected) =>
+        Assert.Equal(expected, new DateTime(2024, month, 1).Quarter());
+
+    [Fact]
+    public void TestAddWorkdays_Forward()
+    {
+        var friday = new DateTime(2024, 1, 5);   // Friday
+        var result = friday.AddWorkdays(3);
+        Assert.Equal(new DateTime(2024, 1, 10), result);  // skips Sat+Sun → Wed
+    }
+
+    [Fact]
+    public void TestAddWorkdays_Backward()
+    {
+        var wednesday = new DateTime(2024, 1, 10);
+        var result = wednesday.AddWorkdays(-3);
+        Assert.Equal(new DateTime(2024, 1, 5), result);   // skips Sat+Sun → Fri
+    }
+
+    [Fact]
+    public void TestAddWorkdays_Zero() =>
+        Assert.Equal(new DateTime(2024, 1, 5), new DateTime(2024, 1, 5).AddWorkdays(0));
+
+    [Theory]
+    [InlineData(2024, 1, 8, DayOfWeek.Monday, 2024, 1, 15)]   // Monday → next Monday
+    [InlineData(2024, 1, 10, DayOfWeek.Friday, 2024, 1, 12)]  // Wednesday → Friday
+    [InlineData(2024, 1, 12, DayOfWeek.Monday, 2024, 1, 15)]  // Friday → next Monday
+    public void TestNextWeekday(int y, int m, int d, DayOfWeek day, int ey, int em, int ed) =>
+        Assert.Equal(new DateTime(ey, em, ed), new DateTime(y, m, d).NextWeekday(day));
 }
