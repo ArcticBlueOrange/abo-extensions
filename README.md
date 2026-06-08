@@ -1,92 +1,131 @@
 # AboExtensions
 
-Piccola raccolta di extension methods per C# che mi ritrovo a riscrivere in ogni progetto. Li ho messi qui una volta per tutte.
+A small collection of C# extension methods I kept rewriting in every project. Collected here once and for all.
 
-## Installazione
+## Installation
 
 ```
 dotnet add package AboExtensions
 ```
 
-## Cosa c'è dentro
+## What's inside
 
-### Stringhe (`AboExtensions.Strings`)
+### Strings (`AboExtensions.Strings`)
 
 ```csharp
 using AboExtensions.Strings;
 ```
 
-**Controlli null/vuoto** — le versioni "leggibili" di `string.IsNullOrWhiteSpace` e compagni, usabili direttamente sulla variabile:
+**Null/empty checks** — readable versions of `string.IsNullOrWhiteSpace` and friends, callable directly on the variable:
 
 ```csharp
-if (nome.IsNullOrWhiteSpace()) ...       // null, "" e "   " → true
-if (nome.IsNotNullOrWhiteSpace()) ...    // il contrario, con [NotNullWhen(true)]
-if (nome.IsNullOrEmpty()) ...            // solo null e ""
-if (nome.IsNotNullOrEmpty()) ...
+if (name.IsNullOrWhiteSpace()) ...       // null, "" and "   " → true
+if (name.IsNotNullOrWhiteSpace()) ...    // opposite, with [NotNullWhen(true)]
+if (name.IsNullOrEmpty()) ...            // only null and ""
+if (name.IsNotNullOrEmpty()) ...
 ```
 
-**`OrElse`** — restituisce un valore di fallback se la stringa è vuota o nulla:
+**`OrElse`** — returns a fallback value if the string is empty or null:
 
 ```csharp
-var titolo = input.OrElse("Senza titolo");
-// se input è null, "" o "   " → "Senza titolo"
-// per ignorare gli spazi bianchi: .OrElse("default", alsows: false)
+var title = input.OrElse("Untitled");
+// if input is null, "" or "   " → "Untitled"
+// to ignore whitespace: .OrElse("default", alsows: false)
 ```
 
-**`Ellipsify`** — tronca una stringa aggiungendo `...` se supera la lunghezza massima:
+**`Capitalize`** — uppercases the first letter, lowercases the rest. Pass `keepOthers: true` to leave the remaining characters unchanged:
 
 ```csharp
-"Ciao mondo".Ellipsify(7)   // → "Ciao..."
-"Ciao".Ellipsify(7)         // → "Ciao"
+"hello".Capitalize()                    // → "Hello"
+"WORLD".Capitalize()                    // → "World"
+"hELLO".Capitalize(keepOthers: true)    // → "HELLO" (only first char uppercased)
 ```
 
-**`NumOnly`** e **`CharOnly`** — filtrano i caratteri indesiderati:
+**`ToSlug`** — converts a string to a URL-friendly slug:
+
+```csharp
+"Hello World".ToSlug()       // → "hello-world"
+"C# is great!".ToSlug()     // → "c-is-great"
+```
+
+**`Repeat`** — repeats a string n times:
+
+```csharp
+"ab".Repeat(3)    // → "ababab"
+"x".Repeat(0)     // → ""
+```
+
+**`Left`** / **`Right`** — safe substring from the left or right:
+
+```csharp
+"hello".Left(3)     // → "hel"
+"hello".Right(3)    // → "llo"
+"hi".Left(10)       // → "hi"  (no exception if n > length)
+```
+
+**`Ellipsify`** — truncates a string adding `...` if it exceeds the max length:
+
+```csharp
+"Hello world".Ellipsify(7)   // → "Hell..."
+"Hello".Ellipsify(7)         // → "Hello"
+```
+
+**`NumOnly`** and **`CharOnly`** — filter out unwanted characters:
 
 ```csharp
 "abc123def456".NumOnly()              // → "123456"
 "A1-B2/C3".CharOnly("ABC123")        // → "A1B2C3"
 ```
 
-**`IsNumeric`** — controlla se la stringa rappresenta un numero:
+**`IsNumeric`** — checks whether the string represents a number:
 
 ```csharp
 "42".IsNumeric()     // → true
 "abc".IsNumeric()    // → false
 ```
 
-**`TrimStartEnd`** — come `Trim` ma per un carattere specifico:
+**`TrimStartEnd`** — like `Trim` but for a specific character:
 
 ```csharp
-"/percorso/".TrimStartEnd('/')    // → "percorso"
+"/path/".TrimStartEnd('/')    // → "path"
 ```
 
-**`StringJoin`** — `string.Join` come extension su una collezione:
+**`StringJoin`** — `string.Join` as an extension on a collection:
 
 ```csharp
 new[] { "a", "b", "c" }.StringJoin(", ")    // → "a, b, c"
 ```
 
-**`RemoveFirstChar`** — rimuove il primo carattere se corrisponde a quello indicato:
+**`ToPascalCase`** / **`ToCamelCase`** — converts a phrase (spaces, dashes, any separator) to PascalCase or camelCase:
+
+```csharp
+"hello world".ToPascalCase()    // → "HelloWorld"
+"foo bar baz".ToCamelCase()     // → "fooBarBaz"
+"already-slug".ToPascalCase()   // → "AlreadySlug"
+"UPPER CASE".ToCamelCase()      // → "upperCase"
+```
+
+**`RemoveFirstChar`** — removes the first character if it matches the given one:
 
 ```csharp
 "/api/users".RemoveFirstChar('/')    // → "api/users"
-"api/users".RemoveFirstChar('/')     // → "api/users" (invariato)
+"api/users".RemoveFirstChar('/')     // → "api/users" (unchanged)
 ```
 
-### Liste (`AboExtensions.Lists`)
+### Lists (`AboExtensions.Lists`)
 
 ```csharp
 using AboExtensions.Lists;
 ```
 
-**`None`** — il contrario di `Any`: restituisce `true` se nessun elemento soddisfa il predicato:
+**`None`** — the opposite of `Any`: returns `true` if no element satisfies the predicate:
 
 ```csharp
 new[] { 1, 2, 3 }.None(x => x > 10)    // → true
 new[] { 1, 2, 3 }.None(x => x > 2)     // → false
 ```
 
-**`IsNullOrEmpty`** — controlla se una collezione è nulla o vuota:
+**`IsNullOrEmpty`** — checks if a collection is null or empty:
 
 ```csharp
 ((IEnumerable<int>?)null).IsNullOrEmpty()    // → true
@@ -100,56 +139,77 @@ new[] { 1 }.IsNullOrEmpty()                 // → false
 using AboExtensions.Reflections;
 ```
 
-**`GetPropertyByName`** — legge il valore di una proprietà per nome:
+**`GetPropertyByName`** — reads a property value by name:
 
 ```csharp
-var persona = new { Nome = "Mario", Età = 30 };
-persona.GetPropertyByName("Nome")    // → "Mario"
-persona.GetPropertyByName("Età")     // → 30
+var person = new { Name = "Mario", Age = 30 };
+person.GetPropertyByName("Name")    // → "Mario"
+person.GetPropertyByName("Age")     // → 30
 ```
 
-**`GetPropertiesToString`** — concatena i valori di più proprietà in una stringa:
+**`GetPropertiesToString`** — concatenates multiple property values into a string:
 
 ```csharp
-var persona = new { Nome = "Mario", Cognome = "Rossi" };
-ReflectionExtensions.GetPropertiesToString(persona, "Nome,Cognome")           // → "Mario Rossi"
-ReflectionExtensions.GetPropertiesToString(persona, "Nome,Cognome", outSep: '-')  // → "Mario-Rossi"
-ReflectionExtensions.GetPropertiesToString(persona, "Nome;Cognome", inSep: ';')   // → "Mario Rossi"
+var person = new { FirstName = "Mario", LastName = "Rossi" };
+ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName")              // → "Mario Rossi"
+ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName", outSep: '-') // → "Mario-Rossi"
+ReflectionExtensions.GetPropertiesToString(person, "FirstName;LastName", inSep: ';')  // → "Mario Rossi"
 ```
 
-### Numeri (`AboExtensions.Numbers`)
+### Numbers (`AboExtensions.Numbers`)
 
 ```csharp
 using AboExtensions.Numbers;
 ```
 
-**`Or`** — valore di default per `float?` nullable:
+**`Or`** — default value for nullable `float?` and `int?`:
 
 ```csharp
-float? valore = null;
-valore.Or()       // → 0f
-valore.Or(99f)    // → 99f
+float? f = null;
+f.Or()       // → 0f
+f.Or(99f)    // → 99f
+
+int? i = null;
+i.Or()       // → 0
+i.Or(99)     // → 99
 ```
 
-**`Round`** — arrotondamento con numero di decimali, su `double` e `decimal`:
+**`Clamp`** — constrains a value within a min/max range, for `int`, `double`, and `decimal`:
 
 ```csharp
-3.14159.Round(2)          // → 3.14
-2.555m.Round(2)           // → 2.56
+15.Clamp(1, 10)      // → 10
+0.Clamp(1, 10)       // → 1
+5.Clamp(1, 10)       // → 5
+5.0.Clamp(1.0, 10.0) // → 5.0
 ```
 
-**`IsNanOrInf`** / **`IsNotNanNorInf`** — controlli su valori float anomali:
+**`Percentage`** — calculates what percentage `part` is of `total`:
 
 ```csharp
-float.NaN.IsNanOrInf()           // → true
-float.PositiveInfinity.IsNanOrInf()  // → true
-3.14f.IsNotNanNorInf()           // → true
+50.0.Percentage(200.0)    // → 25.0
+1.0.Percentage(4.0)       // → 25.0
+5.0.Percentage(0.0)       // → 0.0  (safe division by zero)
 ```
 
-## Requisiti
+**`Round`** — rounding with decimal places, on `double` and `decimal`:
+
+```csharp
+3.14159.Round(2)    // → 3.14
+2.555m.Round(2)     // → 2.56
+```
+
+**`IsNanOrInf`** / **`IsNotNanNorInf`** — checks for abnormal float values:
+
+```csharp
+float.NaN.IsNanOrInf()              // → true
+float.PositiveInfinity.IsNanOrInf() // → true
+3.14f.IsNotNanNorInf()              // → true
+```
+
+## Requirements
 
 - .NET 8.0+
 
-## Licenza
+## License
 
 MIT
