@@ -1,3 +1,4 @@
+using AboExtensions.Chars;
 using AboExtensions.Strings;
 
 namespace AboExtensions.Tests;
@@ -155,6 +156,32 @@ public class TestStringExtensions
     [InlineData("", "")]
     public void TestToCamelCase(string input, string expected) =>
         Assert.Equal(expected, input.ToCamelCase());
+
+    [Theory]
+    [InlineData('a', 'n')]
+    [InlineData('n', 'a')]
+    [InlineData('z', 'm')]
+    [InlineData('m', 'z')]
+    [InlineData('A', 'N')]
+    [InlineData('N', 'A')]
+    [InlineData('Z', 'M')]
+    [InlineData('M', 'Z')]
+    [InlineData('1', '1')]
+    [InlineData(' ', ' ')]
+    [InlineData('!', '!')]
+    public void TestCharRot13(char input, char expected) =>
+        Assert.Equal(expected, input.Rot13());
+
+    [Theory]
+    [InlineData("Hello, World!", "Uryyb, Jbeyq!")]
+    [InlineData("Uryyb, Jbeyq!", "Hello, World!")]
+    [InlineData("abcdefghijklmnopqrstuvwxyz", "nopqrstuvwxyzabcdefghijklm")]
+    [InlineData("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "NOPQRSTUVWXYZABCDEFGHIJKLM")]
+    [InlineData("ROT13", "EBG13")]
+    [InlineData("", "")]
+    [InlineData("123!@#", "123!@#")]
+    public void TestStringRot13(string input, string expected) =>
+        Assert.Equal(expected, input.Rot13());
 
     [Theory]
     [InlineData("user@example.com", true)]

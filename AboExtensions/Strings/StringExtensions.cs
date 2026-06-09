@@ -1,4 +1,5 @@
-﻿using AboExtensions.StringBuilders;
+﻿using AboExtensions.Chars;
+using AboExtensions.StringBuilders;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -210,6 +211,10 @@ public static class StringExtensions
         }
         return c;
     }
+
+    public static string Rot13(this string s) => new([.. s.Select(c => c.Rot13())]);
+
+
     // TODO: CountOccurrences(this string s, string substring) : int
     //   Descrizione: conta quante volte substring appare in s (non sovrapposto).
     //   Parametri: substring — la sottostringa da cercare.

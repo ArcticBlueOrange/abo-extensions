@@ -24,4 +24,11 @@ public static class CharExtensions
 
         return sb.ToString();
     }
+    public static char Rot13(this char c)
+        => c switch
+        {
+            >= 'a' and <= 'z' => (char)((c - 'a' + 13) % 26 + 'a'),
+            >= 'A' and <= 'Z' => (char)((c - 'A' + 13) % 26 + 'A'),
+              _ => c
+        };
 }
