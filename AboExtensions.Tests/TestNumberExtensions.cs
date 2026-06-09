@@ -130,4 +130,54 @@ public class TestNumberExtensions
     [InlineData(5.0, 1.0, 10.0, false, true)]
     public void TestDoubleIsBetween(double input, double min, double max, bool inclusive, bool expected) =>
         Assert.Equal(expected, input.IsBetween(min, max, inclusive));
+
+    // Digits
+
+    [Theory]
+    [InlineData(123, 3)]
+    [InlineData(0, 1)]
+    [InlineData(-42, 2)]
+    [InlineData(1, 1)]
+    [InlineData(9, 1)]
+    [InlineData(10, 2)]
+    [InlineData(99, 2)]
+    [InlineData(100, 3)]
+    [InlineData(1000000, 7)]
+    public void TestDigitsBase10(int input, int expected) =>
+        Assert.Equal(expected, input.Digits());
+
+    // ToOrdinal
+
+    [Theory]
+    [InlineData(1, "1st")]
+    [InlineData(2, "2nd")]
+    [InlineData(3, "3rd")]
+    [InlineData(4, "4th")]
+    [InlineData(11, "11th")]
+    [InlineData(12, "12th")]
+    [InlineData(13, "13th")]
+    [InlineData(21, "21st")]
+    [InlineData(22, "22nd")]
+    [InlineData(23, "23rd")]
+    [InlineData(111, "111th")]
+    [InlineData(112, "112th")]
+    [InlineData(113, "113th")]
+    [InlineData(101, "101st")]
+    [InlineData(0, "0th")]
+    public void TestToOrdinal(int input, string expected) =>
+        Assert.Equal(expected, input.ToOrdinal());
+
+    [Theory]
+    [InlineData(4, 2, 3)]    // 4 = 100₂
+    [InlineData(8, 2, 4)]    // 8 = 1000₂
+    [InlineData(1, 2, 1)]    // 1 = 1₂
+    [InlineData(255, 2, 8)]  // 255 = 11111111₂
+    [InlineData(16, 8, 2)]
+    [InlineData(0xff, 16, 2)]
+    [InlineData(0x0fa, 16, 2)]
+    [InlineData(0x0ffa, 16, 3)]
+    [InlineData(0xf, 16, 1)]
+    [InlineData(0xa, 16, 1)]
+    public void TestDigitsCustomBase(int input, int @base, int expected) =>
+        Assert.Equal(expected, input.Digits(@base));
 }

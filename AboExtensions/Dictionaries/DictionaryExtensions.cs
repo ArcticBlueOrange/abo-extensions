@@ -28,6 +28,25 @@ public static class DictionaryExtensions
     //   Esempi: {a:1}.Merge({a:99, b:2})              → {a:99, b:2}
     //           {a:1}.Merge({a:99, b:2}, overwrite: false) → {a:1, b:2}
 
+    public static Dictionary<V, K> Invert<V, K>(
+        this Dictionary<K, V> d,
+        bool throwOnDuplicate = true)
+    {
+        var ret = new Dictionary<V, K>();
+        foreach (var i in d)
+        {
+            var nk = i.Value;
+            var nv = i.Key;
+
+            if (nk == null)
+                throw new ArgumentNullException(nameof(nk));
+
+            if (ret.ContainsKey(nk) && throwOnDuplicate)
+                throw new ArgumentException($"Duplicate Key: {ret[nk]}");
+            ret[nk] = nv;
+        }
+        return ret;
+    }
     // TODO: Invert<K,V>(this Dictionary<K,V> d) : Dictionary<V,K>
     //   Descrizione: restituisce un nuovo dizionario con chiavi e valori scambiati.
     //   Lancia ArgumentException se ci sono valori duplicati (non invertibili).

@@ -17,9 +17,11 @@ public static class CharExtensions
 
     public static string Repeat(this char c, int n)
     {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < n;)
+        var sb = new StringBuilder();
+
+        for (int i = 0; i < n; i++)
             sb.Append(c);
+
         return sb.ToString();
     }
 }

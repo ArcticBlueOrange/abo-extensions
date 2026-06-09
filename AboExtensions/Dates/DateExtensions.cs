@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace AboExtensions.Dates;
 
 public static class DateExtensions
@@ -45,12 +47,12 @@ public static class DateExtensions
     //   Esempi: DateTime.Today.IsToday()            → true
     //           DateTime.Today.AddDays(1).IsToday() → false
 
-    public static bool IsYesterday(this DateTime d) => d.Date == Yesterday();
+    public static bool IsYesterday(this DateTime d) => d.Date == Yesterday;
     // TODO: IsYesterday(this DateTime d) : bool
     //   Descrizione: true se la data coincide con ieri (confronta solo la parte Date).
     //   Esempi: DateTime.Today.AddDays(-1).IsYesterday() → true
 
-    public static bool IsTomorrow(this DateTime d) => d.Date == Tomorrow();
+    public static bool IsTomorrow(this DateTime d) => d.Date == Tomorrow;
     // TODO: IsTomorrow(this DateTime d) : bool
     //   Descrizione: true se la data coincide con domani (confronta solo la parte Date).
     //   Esempi: DateTime.Today.AddDays(1).IsTomorrow() → true
@@ -74,25 +76,15 @@ public static class DateExtensions
     //   Esempi: new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToUnixTimestamp() → 0
     //           new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToUnixTimestamp() → 1704067200
 
-    public static DateTime Yesterday() => DateTime.Today.AddDays(-1);
-    // TODO: Yesterday() : DateTime  [metodo statico su DateExtensions, non extension]
-    //   Descrizione: restituisce la data di ieri a mezzanotte, analogo a DateTime.Today.
-    //   Non è un extension method ma un metodo statico di convenienza, come DateTime.Today.
-    //   Esempi: DateExtensions.Yesterday() → DateTime.Today.AddDays(-1)
-    //   Nota: valutare se esporre anche come property statica invece che metodo.
+    public static DateTime Yesterday => DateTime.Today.AddDays(-1);
 
-    public static DateTime Tomorrow() => DateTime.Today.AddDays(1);
-    // TODO: Tomorrow() : DateTime  [metodo statico su DateExtensions, non extension]
-    //   Descrizione: restituisce la data di domani a mezzanotte, analogo a DateTime.Today.
-    //   Non è un extension method ma un metodo statico di convenienza, come DateTime.Today.
-    //   Esempi: DateExtensions.Tomorrow() → DateTime.Today.AddDays(1)
-    //   Nota: valutare se esporre anche come property statica invece che metodo.
+    public static DateTime Tomorrow => DateTime.Today.AddDays(1);
 
-    // TODO: WeekNumber(this DateTime d) : int
-    //   Descrizione: restituisce il numero di settimana ISO 8601 (1–53).
-    //   La settimana ISO inizia il lunedì; la prima settimana dell'anno è quella con il primo giovedì.
-    //   Parametri: nessuno oltre alla data.
-    //   Esempi: new DateTime(2024, 1, 1).WeekNumber() → 1
-    //           new DateTime(2024, 12, 30).WeekNumber() → 1  (appartiene alla settimana 1 del 2025)
-    //   Nota: usare ISOWeek.GetWeekOfYear() disponibile in .NET 5+.
+    /// <summary>
+    /// Returns the week number (ISO 8601)
+    /// ISO Weeks starts on Monday; W1 is the one containing a Thursday
+    /// </summary>
+    /// <param name="d"></param>
+    /// <returns></returns>
+    public static int WeekNumber(this DateTime d) => ISOWeek.GetWeekOfYear(d);
 }

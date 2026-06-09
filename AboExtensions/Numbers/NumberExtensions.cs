@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using AboExtensions.Strings;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace AboExtensions.Numbers;
 
@@ -39,7 +41,20 @@ public static class NumberExtensions
     //   Esempi: 3.IsOdd() → true
     //           4.IsOdd() → false
 
-    // TODO: Digits(this int i) : int
+    public static int Digits(this int n, int @base = 10)
+    {
+        n = n.Abs();
+        int d = 0;
+
+        do
+        {
+            n /= @base;
+            d++;
+        } while (n != 0);
+
+        return d;
+    }
+    // TODO: Digits(this int i, this int base = 10) : int
     //   Descrizione: restituisce il numero di cifre dell'intero (il segno non conta).
     //   Esempi: 123.Digits()  → 3
     //           0.Digits()    → 1

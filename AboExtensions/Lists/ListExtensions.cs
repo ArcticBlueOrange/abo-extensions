@@ -36,11 +36,19 @@ public static class ListExtensions
         return result;
     }
 
-    // TODO: WhereNotNull<T>(this IEnumerable<T?> source) : IEnumerable<T>  [T : class]
-    //   Descrizione: filtra i null dalla sequenza, il tipo di ritorno è non-nullable.
-    //   Overload anche per value types: IEnumerable<T?> → IEnumerable<T>  [T : struct]
-    //   Esempi: new[] { "a", null, "b" }.WhereNotNull() → ["a", "b"]
-    //           new int?[] { 1, null, 3 }.WhereNotNull() → [1, 3]
+    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source) where T : class
+    {
+        foreach (var item in source)
+            if (item != null)
+                yield return item;
+    }
+
+    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source) where T : struct
+    {
+        foreach (var item in source)
+            if (item.HasValue)
+                yield return item.Value;
+    }
 
     // TODO: Second<T>(this IEnumerable<T> source) : T
     //   Descrizione: restituisce il secondo elemento; lancia InvalidOperationException se la sequenza ha meno di 2 elementi.

@@ -118,4 +118,40 @@ public class TestListExtensions
     [Fact]
     public void Shuffle_EmptyList_ReturnsEmpty() =>
         Assert.Empty(new List<int>().Shuffle());
+
+    // WhereNotNull (reference types)
+
+    [Fact]
+    public void WhereNotNull_FiltersNullStrings() =>
+        Assert.Equal(new[] { "a", "b" }, new[] { "a", null, "b" }.WhereNotNull());
+
+    [Fact]
+    public void WhereNotNull_AllNull_ReturnsEmpty() =>
+        Assert.Empty(new string?[] { null, null }.WhereNotNull());
+
+    [Fact]
+    public void WhereNotNull_NoNull_ReturnsAll() =>
+        Assert.Equal(new[] { "x", "y" }, new[] { "x", "y" }.WhereNotNull());
+
+    [Fact]
+    public void WhereNotNull_EmptySource_ReturnsEmpty() =>
+        Assert.Empty(Array.Empty<string?>().WhereNotNull());
+
+    // WhereNotNull (value types)
+
+    [Fact]
+    public void WhereNotNull_FiltersNullInts() =>
+        Assert.Equal(new[] { 1, 3 }, new int?[] { 1, null, 3 }.WhereNotNull());
+
+    [Fact]
+    public void WhereNotNull_AllNullInts_ReturnsEmpty() =>
+        Assert.Empty(new int?[] { null, null }.WhereNotNull());
+
+    [Fact]
+    public void WhereNotNull_NoNullInts_ReturnsAll() =>
+        Assert.Equal(new[] { 1, 2 }, new int?[] { 1, 2 }.WhereNotNull());
+
+    [Fact]
+    public void WhereNotNull_EmptyIntSource_ReturnsEmpty() =>
+        Assert.Empty(Array.Empty<int?>().WhereNotNull());
 }

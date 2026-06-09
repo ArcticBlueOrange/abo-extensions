@@ -4,6 +4,7 @@ namespace AboExtensions.IpAddresses;
 
 public static class IpExtensions
 {
+    public static bool IsValidIp(this string s) => IPAddress.TryParse(s, out _);
     // TODO: IsValidIp(this string s) : bool
     //   Descrizione: true se la stringa è un indirizzo IP valido (IPv4 o IPv6).
     //   Usa IPAddress.TryParse — zero deps, nessuna regex.
@@ -13,11 +14,23 @@ public static class IpExtensions
     //           "hello".IsValidIp()           → false
     //           "".IsValidIp()                → false
 
+    public static bool IsValidIpV4(this string s)
+    {
+        var ok = IPAddress.TryParse(s, out _);
+        ok &= s.Contains(".");
+        return ok;
+    }
     // TODO: IsValidIpv4(this string s) : bool
     //   Descrizione: true solo se è un indirizzo IPv4 valido.
     //   Esempi: "192.168.1.1".IsValidIpv4()  → true
     //           "::1".IsValidIpv4()           → false
 
+    public static bool IsValidIpV6(this string s)
+    {
+        var ok = IPAddress.TryParse(s, out _);
+        ok &= s.Contains(":");
+        return ok;
+    }
     // TODO: IsValidIpv6(this string s) : bool
     //   Descrizione: true solo se è un indirizzo IPv6 valido.
     //   Esempi: "::1".IsValidIpv6()           → true
@@ -32,6 +45,12 @@ public static class IpExtensions
     //           "8.8.8.8".IsPrivateIp()      → false
     //           "::1".IsPrivateIp()           → true
 
+    public static IPAddress? ToIpAddress(this string s)
+    {
+        if (IPAddress.TryParse(s, out var _out))
+            return _out;
+        return null;
+    }
     // TODO: ToIpAddress(this string s) : IPAddress?
     //   Descrizione: converte la stringa in IPAddress, restituisce null se non valida.
     //   Alternativa null-safe a IPAddress.Parse.
