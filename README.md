@@ -160,6 +160,13 @@ new[] { 1, 2 }.Batch(10)            // → [[1,2]]
 new List<int> { 1, 2, 3, 4, 5 }.Shuffle()   // → e.g. [3, 1, 5, 2, 4]
 ```
 
+**`WhereNotNull`** — filters null elements from a sequence; the return type is non-nullable. Works for both reference types and nullable value types:
+
+```csharp
+new[] { "a", null, "b" }.WhereNotNull()    // → ["a", "b"]
+new int?[] { 1, null, 3 }.WhereNotNull()   // → [1, 3]
+```
+
 ### Numbers (`AboExtensions.Numbers`)
 
 ```csharp
@@ -218,6 +225,54 @@ decimal? m = null; m.Or(9.9m)  // → 9.9m
 float.NaN.IsNanOrInf()              // → true
 float.PositiveInfinity.IsNanOrInf() // → true
 3.14f.IsNotNanNorInf()              // → true
+```
+
+**`IsEven`** / **`IsOdd`** — parity checks on `int`:
+
+```csharp
+4.IsEven()    // → true
+3.IsOdd()     // → true
+0.IsEven()    // → true
+```
+
+**`Digits`** — number of digits in an integer (sign ignored), optionally in a given base:
+
+```csharp
+123.Digits()      // → 3
+0.Digits()        // → 1
+(-42).Digits()    // → 2
+255.Digits(2)     // → 8  (11111111₂)
+255.Digits(16)    // → 2  (FF₁₆)
+```
+
+**`ToOrdinal`** — converts an integer to its English ordinal string, handles the 11th/12th/13th special cases:
+
+```csharp
+1.ToOrdinal()     // → "1st"
+2.ToOrdinal()     // → "2nd"
+3.ToOrdinal()     // → "3rd"
+4.ToOrdinal()     // → "4th"
+11.ToOrdinal()    // → "11th"
+21.ToOrdinal()    // → "21st"
+```
+
+### Complex Numbers (`AboExtensions.ComplexNumbers`)
+
+```csharp
+using AboExtensions.ComplexNumbers;
+```
+
+**`ToMathString`** — formats a complex number in standard mathematical notation `a+bi`, omitting zero parts and the coefficient `1` before `i`:
+
+```csharp
+new Complex(1, 2).ToMathString()    // → "1+2i"
+new Complex(1, -2).ToMathString()   // → "1-2i"
+new Complex(0, 2).ToMathString()    // → "2i"
+new Complex(1, 0).ToMathString()    // → "1"
+new Complex(0, 0).ToMathString()    // → "0"
+new Complex(0, 1).ToMathString()    // → "i"
+new Complex(0, -1).ToMathString()   // → "-i"
+new Complex(1, 1).ToMathString()    // → "1+i"
 ```
 
 ### Dates (`AboExtensions.Dates`)
