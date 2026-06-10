@@ -9,13 +9,6 @@ public static class ExceptionExtensions
             ret = ret.InnerException;
         return ret;
     }
-    // TODO: GetRootCause(this Exception ex) : Exception
-    //   Descrizione: percorre ricorsivamente la catena InnerException e restituisce
-    //   l'eccezione più interna (quella senza InnerException).
-    //   Esempi: new Exception("outer", new Exception("inner", new Exception("root")))
-    //               .GetRootCause().Message → "root"
-    //           new Exception("no inner").GetRootCause().Message → "no inner"
-
     public static IEnumerable<Exception> Flatten(this Exception e)
     {
         var v = e;
@@ -26,12 +19,6 @@ public static class ExceptionExtensions
             yield return v;
         }
     }
-    // TODO: Flatten(this Exception ex) : IEnumerable<Exception>
-    //   Descrizione: restituisce tutte le eccezioni nella catena InnerException
-    //   come sequenza piatta, a partire da ex fino alla root cause.
-    //   Esempi: new Exception("a", new Exception("b", new Exception("c"))).Flatten()
-    //               → [Exception("a"), Exception("b"), Exception("c")]
-
     // TODO: ToLogString(this Exception ex, bool includeStackTrace = true) : string
     //   Descrizione: formatta l'eccezione e tutta la sua catena in una stringa
     //   leggibile per il logging. Include tipo, messaggio e opzionalmente lo stack trace.

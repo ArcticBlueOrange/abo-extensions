@@ -9,10 +9,6 @@ public static class DictionaryExtensions
     //           new Dictionary<string,int>{{"a",1}}.GetOrDefault("b")      → 0
     //           new Dictionary<string,int>{{"a",1}}.GetOrDefault("b", -1)  → -1
 
-    // TODO: AddOrUpdate<K,V>(this Dictionary<K,V> d, K key, V value) : Dictionary<K,V>
-    //   Descrizione: aggiunge la coppia chiave/valore se la chiave non esiste,
-    //   altrimenti aggiorna il valore esistente. Restituisce il dizionario per il chaining.
-    //   Esempi: dict.AddOrUpdate("key", 42)  →  dict["key"] == 42  (sia se nuovo che esistente)
     public static Dictionary<K, V> AddOrUpdate<K, V>(this Dictionary<K, V> d, K k, V v)
     {
         d[k] = v;
@@ -47,9 +43,4 @@ public static class DictionaryExtensions
         }
         return ret;
     }
-    // TODO: Invert<K,V>(this Dictionary<K,V> d) : Dictionary<V,K>
-    //   Descrizione: restituisce un nuovo dizionario con chiavi e valori scambiati.
-    //   Lancia ArgumentException se ci sono valori duplicati (non invertibili).
-    //   Esempi: new Dictionary<string,int>{{"a",1},{"b",2}}.Invert()
-    //               → new Dictionary<int,string>{{1,"a"},{2,"b"}}
 }

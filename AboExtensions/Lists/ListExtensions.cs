@@ -61,16 +61,28 @@ public static class ListExtensions
     //           new[] { 1 }.SecondOrDefault() → 0
     //           new[] { 1 }.SecondOrDefault(-1) → -1
 
-    // TODO: Flatten<T>(this IEnumerable<IEnumerable<T>> source) : IEnumerable<T>
-    //   Descrizione: appiattisce una sequenza di sequenze in una singola sequenza.
-    //   Esempi: new[] { new[] {1,2}, new[] {3,4} }.Flatten() → [1, 2, 3, 4]
-    //           Enumerable.Empty<IEnumerable<int>>().Flatten() → []
+    public static List<T> Flatten<T>(this IEnumerable<IEnumerable<T>> l) where T : class
+    {
+        List<T> values = new List<T>();
 
-    // TODO: Frequencies<T>(this IEnumerable<T> source) : Dictionary<T, int>
-    //   Descrizione: restituisce un dizionario con il conteggio di ogni elemento distinto.
-    //   Esempi: new[] { "a", "b", "a", "c", "b", "a" }.Frequencies()
-    //               → { "a": 3, "b": 2, "c": 1 }
-    //           new[] { 1, 1, 2 }.Frequencies() → { 1: 2, 2: 1 }
+        foreach (var sl in l)
+            foreach (var i in sl)
+                values.Add(i);
+
+        return values;
+    }
+    public static Dictionary<T, int> Frequencies<T>(this IEnumerable<T> src)
+    {
+        var _out = new Dictionary<T, int>();
+        foreach (var i in src)
+        {
+            if (_out.ContainsKey(i))
+                _out[i]++;
+            else
+                _out[i] = 1;
+        }
+        return _out;
+    }
 
     // TODO: Paginate<T>(this IEnumerable<T> source, int page, int pageSize) : IEnumerable<T>
     //   Descrizione: restituisce gli elementi della pagina richiesta (1-based).

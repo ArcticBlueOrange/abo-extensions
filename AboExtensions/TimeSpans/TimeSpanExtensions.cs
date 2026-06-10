@@ -2,19 +2,11 @@ namespace AboExtensions.TimeSpans;
 
 public static class TimeSpanExtensions
 {
-    // TODO: IsZero(this TimeSpan ts) : bool
-    //   Descrizione: true se il TimeSpan è esattamente zero.
-    //   Esempi: TimeSpan.Zero.IsZero()              → true
-    //           TimeSpan.FromSeconds(1).IsZero()    → false
+    public static bool IsZero(this TimeSpan value) => value == TimeSpan.Zero;
 
-    // TODO: Ago(this TimeSpan ts) : DateTime
-    //   Descrizione: restituisce DateTime.Now - ts. Utile per espressioni leggibili.
-    //   Esempi: TimeSpan.FromHours(2).Ago()   → DateTime.Now.AddHours(-2)
-    //           TimeSpan.FromDays(1).Ago()    → ieri alla stessa ora
+    public static DateTime Ago(this TimeSpan value) => DateTime.Now - value;
 
-    // TODO: FromNow(this TimeSpan ts) : DateTime
-    //   Descrizione: restituisce DateTime.Now + ts.
-    //   Esempi: TimeSpan.FromMinutes(30).FromNow() → DateTime.Now.AddMinutes(30)
+    public static DateTime FromNow(this TimeSpan value) => DateTime.Now + value;
 
     // TODO: ToReadableString(this TimeSpan ts) : string
     //   Descrizione: formatta il TimeSpan in linguaggio naturale, mostrando solo le

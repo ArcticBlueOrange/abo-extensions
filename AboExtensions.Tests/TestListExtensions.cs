@@ -154,4 +154,70 @@ public class TestListExtensions
     [Fact]
     public void WhereNotNull_EmptyIntSource_ReturnsEmpty() =>
         Assert.Empty(Array.Empty<int?>().WhereNotNull());
+
+    // Flatten
+
+    [Fact]
+    public void Flatten_TwoSubLists_ReturnsConcatenation() =>
+        Assert.Equal(new[] { "a", "b", "c", "d" },
+            new[] { new[] { "a", "b" }, new[] { "c", "d" } }.Flatten());
+
+    [Fact]
+    public void Flatten_EmptyOuter_ReturnsEmpty() =>
+        Assert.Empty(Array.Empty<string[]>().Flatten());
+
+    [Fact]
+    public void Flatten_InnerEmpty_SkipsEmpty() =>
+        Assert.Equal(new[] { "a", "b" },
+            new[] { new[] { "a", "b" }, Array.Empty<string>() }.Flatten());
+
+    [Fact]
+    public void Flatten_AllEmpty_ReturnsEmpty() =>
+        Assert.Empty(new[] { Array.Empty<string>(), Array.Empty<string>() }.Flatten());
+
+    [Fact]
+    public void Flatten_PreservesOrder() =>
+        Assert.Equal(new[] { "1", "2", "3", "4", "5" },
+            new[] { new[] { "1", "2" }, new[] { "3" }, new[] { "4", "5" } }.Flatten());
+
+    [Fact]
+    public void Flatten_ReturnsList() =>
+        Assert.IsType<List<string>>(new[] { new[] { "x" } }.Flatten());
+
+    // Frequencies
+
+    [Fact]
+    public void Frequencies_CountsOccurrences()
+    {
+        var freq = new[] { "a", "b", "a", "c", "a", "b" }.Frequencies();
+        Assert.Equal(3, freq["a"]);
+        Assert.Equal(2, freq["b"]);
+        Assert.Equal(1, freq["c"]);
+    }
+
+    [Fact]
+    public void Frequencies_AllUnique_EachCountIsOne()
+    {
+        var freq = new[] { 1, 2, 3 }.Frequencies();
+        Assert.All(freq.Values, v => Assert.Equal(1, v));
+    }
+
+    [Fact]
+    public void Frequencies_Empty_ReturnsEmptyDictionary() =>
+        Assert.Empty(Array.Empty<string>().Frequencies());
+
+    [Fact]
+    public void Frequencies_SingleElement_CountIsOne()
+    {
+        var freq = new[] { "x" }.Frequencies();
+        Assert.Equal(1, freq["x"]);
+    }
+
+    [Fact]
+    public void Frequencies_AllSame_CountEqualsLength()
+    {
+        var freq = new[] { "z", "z", "z", "z" }.Frequencies();
+        Assert.Single(freq);
+        Assert.Equal(4, freq["z"]);
+    }
 }
