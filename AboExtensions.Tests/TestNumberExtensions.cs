@@ -167,6 +167,84 @@ public class TestNumberExtensions
     public void TestToOrdinal(int input, string expected) =>
         Assert.Equal(expected, input.ToOrdinal());
 
+    // ToRoman
+
+    [Theory]
+    [InlineData(1, "I")]
+    [InlineData(4, "IV")]
+    [InlineData(5, "V")]
+    [InlineData(9, "IX")]
+    [InlineData(10, "X")]
+    [InlineData(14, "XIV")]
+    [InlineData(40, "XL")]
+    [InlineData(49, "XLIX")]
+    [InlineData(50, "L")]
+    [InlineData(90, "XC")]
+    [InlineData(99, "XCIX")]
+    [InlineData(100, "C")]
+    [InlineData(400, "CD")]
+    [InlineData(500, "D")]
+    [InlineData(900, "CM")]
+    [InlineData(1000, "M")]
+    [InlineData(1994, "MCMXCIV")]
+    [InlineData(3999, "MMMCMXCIX")]
+    [InlineData(2024, "MMXXIV")]
+    [InlineData(58, "LVIII")]
+    public void TestToRoman(int input, string expected) =>
+        Assert.Equal(expected, input.RomanEncode());
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [InlineData(4000)]
+    public void TestToRomanOutOfRange(int input) =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => input.RomanEncode());
+
+    // RomanDecode
+
+    [Theory]
+    [InlineData("I", 1)]
+    [InlineData("IV", 4)]
+    [InlineData("V", 5)]
+    [InlineData("IX", 9)]
+    [InlineData("X", 10)]
+    [InlineData("XIV", 14)]
+    [InlineData("XL", 40)]
+    [InlineData("XLIX", 49)]
+    [InlineData("L", 50)]
+    [InlineData("LVIII", 58)]
+    [InlineData("XC", 90)]
+    [InlineData("XCIX", 99)]
+    [InlineData("C", 100)]
+    [InlineData("CD", 400)]
+    [InlineData("D", 500)]
+    [InlineData("CM", 900)]
+    [InlineData("M", 1000)]
+    [InlineData("MCMXCIV", 1994)]
+    [InlineData("MMMCMXCIX", 3999)]
+    [InlineData("MMXXIV", 2024)]
+    public void TestRomanDecode(string input, int expected) =>
+        Assert.Equal(expected, input.RomanDecode());
+
+    [Theory]
+    [InlineData("xiv", 14)]
+    [InlineData("mcmxciv", 1994)]
+    [InlineData("Xiv", 14)]
+    public void TestRomanDecodeCaseInsensitive(string input, int expected) =>
+        Assert.Equal(expected, input.RomanDecode());
+
+    [Theory]
+    [InlineData("ABC")]
+    [InlineData("123")]
+    [InlineData("")]
+    [InlineData("IIII")]
+    [InlineData("IXIX")]
+    [InlineData("DDD")]
+    [InlineData("MMMM")]
+    [InlineData("LL")]
+    public void TestRomanDecodeInvalid(string input) =>
+        Assert.Throws<FormatException>(() => input.RomanDecode());
+
     [Theory]
     [InlineData(4, 2, 3)]    // 4 = 100₂
     [InlineData(8, 2, 4)]    // 8 = 1000₂

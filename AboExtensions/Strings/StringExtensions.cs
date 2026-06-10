@@ -121,7 +121,7 @@ public static class StringExtensions
         string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + (keepOthers ? s[1..] : s[1..].ToLower());
     public static string ToSlug(this string s)
     {
-        var result = new System.Text.StringBuilder();
+        var result = new StringBuilder();
         bool prevDash = false;
         foreach (var c in s.ToLower())
         {

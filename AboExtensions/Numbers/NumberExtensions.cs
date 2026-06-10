@@ -1,4 +1,5 @@
 ﻿using AboExtensions.Strings;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -29,18 +30,16 @@ public static class NumberExtensions
         inclusive ? d >= min && d <= max : d > min && d < max;
 
     public static bool IsEven(this int i) => (i & 1) == 0;
-    // TODO: IsEven(this int i) : bool
-    //   Descrizione: true se il numero è pari.
-    //   Esempi: 4.IsEven() → true
-    //           3.IsEven() → false
-    //           0.IsEven() → true
 
     public static bool IsOdd(this int i) => (i & 1) != 0;
-    // TODO: IsOdd(this int i) : bool
-    //   Descrizione: true se il numero è dispari. Equivale a !IsEven().
-    //   Esempi: 3.IsOdd() → true
-    //           4.IsOdd() → false
 
+    /// <summary>
+    /// Returns the number of digits of the int 
+    /// (ignoring sign, and with arbitrary bases)
+    /// </summary>
+    /// <param name="n"></param>
+    /// <param name="base">Default 10</param>
+    /// <returns></returns>
     public static int Digits(this int n, int @base = 10)
     {
         n = n.Abs();
@@ -54,59 +53,120 @@ public static class NumberExtensions
 
         return d;
     }
-    // TODO: Digits(this int i, this int base = 10) : int
-    //   Descrizione: restituisce il numero di cifre dell'intero (il segno non conta).
-    //   Esempi: 123.Digits()  → 3
-    //           0.Digits()    → 1
-    //           (-42).Digits() → 2
 
-    // TODO: ToRoman(this int i) : string
-    //   Descrizione: converte un intero positivo in numeral romano. Range supportato: 1–3999.
-    //   Lancia ArgumentOutOfRangeException se fuori range.
-    //   Esempi: 1.ToRoman()    → "I"
-    //           4.ToRoman()    → "IV"
-    //           14.ToRoman()   → "XIV"
-    //           1994.ToRoman() → "MCMXCIV"
-    //           3999.ToRoman() → "MMMCMXCIX"
+    /// <summary>
+    /// Converts an int into a roman numeral
+    /// </summary>
+    /// <param name="i"> Must be between 1 and 3999</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static string RomanEncode(this int i)
+    {
+        if (i < 1 || i > 3999)
+            throw new ArgumentOutOfRangeException("i must be between 1 and 3999");
 
-    // TODO: FromRoman(this string s) : int
-    //   Descrizione: converte una stringa di numerali romani in intero. Case-insensitive.
-    //   Lancia FormatException se la stringa non è un numerale romano valido.
-    //   Algoritmo: scansione da destra; se il valore corrente è minore del precedente
-    //   (es. I prima di V) sottrarre, altrimenti sommare.
-    //   Esempi: "I".FromRoman()       → 1
-    //           "XIV".FromRoman()     → 14
-    //           "MCMXCIV".FromRoman() → 1994
-    //           "xiv".FromRoman()     → 14  (case-insensitive)
-    //           "ABC".FromRoman()     → throw FormatException
+        var ret = new StringBuilder();
+        var divisors = new Dictionary<int, string>()
+        {
+            [1000] = "M",
+            [900] = "CM",
+            [500] = "D",
+            [400] = "CD",
+            [100] = "C",
+            [90] = "XC",
+            [50] = "L",
+            [40] = "XL",
+            [10] = "X",
+            [9] = "IX",
+            [5] = "V",
+            [4] = "IV",
+            [1] = "I",
+        };
+
+        foreach (var d in divisors)
+        {
+            while (i >= d.Key)
+            {
+                i -= d.Key;
+                ret.Append(d.Value);
+            }
+        }
+
+        return ret.ToString();
+    }
+
+    /// <summary>
+    /// Convrts a string of roman numerals into an integer
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static int RomanDecode(this string s)
+    {
+        var td = s.ToUpper().CharOnly("MCDXLIV");
+        if (td.Length != s.Length || td.IsNullOrWhiteSpace())
+            throw new FormatException("Invalid String");
+        var cum = 0;
+        var divisors = new Dictionary<int, string>()
+        {
+            [1000] = "M",
+            [900] = "CM",
+            [500] = "D",
+            [400] = "CD",
+            [100] = "C",
+            [90] = "XC",
+            [50] = "L",
+            [40] = "XL",
+            [10] = "X",
+            [9] = "IX",
+            [5] = "V",
+            [4] = "IV",
+            [1] = "I",
+        };
+        var counters = new Dictionary<int, int>()
+        {
+            [1000] = 3,
+            [900] = 1,
+            [500] = 1,
+            [400] = 1,
+            [100] = 3,
+            [90] = 1,
+            [50] = 1,
+            [40] = 1,
+            [10] = 3,
+            [9] = 1,
+            [5] = 1,
+            [4] = 1,
+            [1] = 3,
+
+        };
+
+        foreach (var d in divisors)
+        {
+            var cnt = 0;
+            while (td.StartsWith(d.Value))
+            {
+                cum += d.Key;
+                td = td.Substring(d.Value.Length);
+                cnt++;
+                if (cnt > counters[d.Key])
+                    throw new FormatException("Invalid Roman Numeral");
+            }
+        }
+
+        return cum;
+    }
 
     public static string ToOrdinal(this int i)
     {
         var s = $"{i}";
-        if (s.EndsWith("11"))
-            s += "th";
-        else if (s.EndsWith("12"))
-            s += "th";
-        else if (s.EndsWith("13"))
-            s += "th";
-        else if (s.EndsWith('1'))
-            s += "st";
-        else if (s.EndsWith('2'))
-            s += "nd";
-        else if (s.EndsWith('3'))
-            s += "rd";
-        else
-            s += "th";
+        if (s.EndsWith("11")) s += "th";
+        else if (s.EndsWith("12")) s += "th";
+        else if (s.EndsWith("13")) s += "th";
+        else if (s.EndsWith('1')) s += "st";
+        else if (s.EndsWith('2')) s += "nd";
+        else if (s.EndsWith('3')) s += "rd";
+        else s += "th";
         return s;
     }
-    // TODO: ToOrdinal(this int i) : string
-    //   Descrizione: converte un intero nel corrispondente ordinale in inglese.
-    //   Gestisce i casi speciali 11th, 12th, 13th.
-    //   Esempi: 1.ToOrdinal() → "1st"
-    //           2.ToOrdinal() → "2nd"
-    //           3.ToOrdinal() → "3rd"
-    //           4.ToOrdinal() → "4th"
-    //           11.ToOrdinal() → "11th"
-    //           21.ToOrdinal() → "21st"
 }
 
