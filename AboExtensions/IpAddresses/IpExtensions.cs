@@ -9,14 +9,14 @@ public static class IpExtensions
     public static bool IsValidIpV4(this string s)
     {
         var ok = IPAddress.TryParse(s, out _);
-        ok &= s.Contains(".");
+        ok &= s.Contains('.');
         return ok;
     }
 
     public static bool IsValidIpV6(this string s)
     {
         var ok = IPAddress.TryParse(s, out _);
-        ok &= s.Contains(":");
+        ok &= s.Contains(':');
         return ok;
     }
 
