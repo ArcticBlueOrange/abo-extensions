@@ -8,9 +8,32 @@ A small collection of C# extension methods I kept rewriting in every project. Co
 dotnet add package AboExtensions
 ```
 
-## What's inside
+## Quick reference
 
-### Strings (`AboExtensions.Strings`)
+| Namespace | Methods |
+|-----------|---------|
+| `Booleans` | `Toggle` |
+| `Chars` | `IsUnicodeLetter`, `IsVowel`, `IsConsonant`, `IsAscii`, `Repeat`, `Rot13` |
+| `ComplexNumbers` | `ToMathString` |
+| `Dates` | `IsWeekend`, `IsWeekday`, `StartOfDay`, `EndOfDay`, `StartOfWeek`, `Age`, `IsInThePast`, `IsInTheFuture`, `Quarter`, `AddWorkdays`, `NextWeekday` |
+| `Dictionaries` | `AddOrUpdate`, `Invert` |
+| `Enums` | `GetValues` |
+| `Exceptions` | `GetRootCause`, `Flatten` |
+| `Guids` | `IsEmpty`, `IsNotEmpty`, `OrNew` |
+| `IpAddresses` | `IsValidIp`, `IsValidIpV4`, `IsValidIpV6`, `ToIpAddress` |
+| `Lists` | `ForEach`, `None`, `IsNullOrEmpty`, `Batch`, `Shuffle`, `WhereNotNull`, `Flatten`, `Frequencies` |
+| `Numbers` | `Or`, `Clamp`, `IsBetween`, `Abs`, `Percentage`, `Round`, `IsNanOrInf`, `IsNotNanNorInf`, `IsEven`, `IsOdd`, `Digits`, `ToOrdinal`, `RomanEncode`, `RomanDecode` |
+| `Nullables` | `IfNotNull`, `MapNotNull` |
+| `Objects` | `IsNull`, `IsNotNull` |
+| `Randoms` | `NextBool`, `NextItem`, `RandomItem`, `NextEnum`, `NextString` |
+| `Reflections` | `GetPropertyByName`, `GetPropertiesToString` |
+| `StringBuilders` | `AppendIf`, `AppendLineIf`, `Prepend` |
+| `Strings` | `IsNullOrWhiteSpace`, `IsNotNullOrWhiteSpace`, `IsNullOrEmpty`, `IsNotNullOrEmpty`, `OrElse`, `Capitalize`, `ToSlug`, `ToPascalCase`, `ToCamelCase`, `Repeat`, `Left`, `Right`, `Ellipsify`, `NumOnly`, `CharOnly`, `IsNumeric`, `IsEmail`, `TrimStartEnd`, `StringJoin`, `RemoveFirstChar` |
+| `TimeSpans` | `IsZero`, `Ago`, `FromNow` |
+
+---
+
+## Strings (`AboExtensions.Strings`)
 
 ```csharp
 using AboExtensions.Strings;
@@ -120,54 +143,9 @@ new[] { "a", "b", "c" }.StringJoin(", ")    // → "a, b, c"
 "api/users".RemoveFirstChar('/')     // → "api/users" (unchanged)
 ```
 
-### Lists (`AboExtensions.Lists`)
+---
 
-```csharp
-using AboExtensions.Lists;
-```
-
-**`ForEach`** — executes an action for each element of any `IEnumerable` (LINQ doesn't have this):
-
-```csharp
-new[] { 1, 2, 3 }.ForEach(x => Console.WriteLine(x));
-```
-
-**`None`** — the opposite of `Any`: returns `true` if no element satisfies the predicate:
-
-```csharp
-new[] { 1, 2, 3 }.None(x => x > 10)    // → true
-new[] { 1, 2, 3 }.None(x => x > 2)     // → false
-```
-
-**`IsNullOrEmpty`** — checks if a collection is null or empty:
-
-```csharp
-((IEnumerable<int>?)null).IsNullOrEmpty()    // → true
-Array.Empty<int>().IsNullOrEmpty()           // → true
-new[] { 1 }.IsNullOrEmpty()                 // → false
-```
-
-**`Batch`** — splits a sequence into chunks of the given size; the last batch may be smaller:
-
-```csharp
-new[] { 1, 2, 3, 4, 5 }.Batch(2)   // → [[1,2], [3,4], [5]]
-new[] { 1, 2 }.Batch(10)            // → [[1,2]]
-```
-
-**`Shuffle`** — returns a new shuffled list (Fisher-Yates), does not mutate the original:
-
-```csharp
-new List<int> { 1, 2, 3, 4, 5 }.Shuffle()   // → e.g. [3, 1, 5, 2, 4]
-```
-
-**`WhereNotNull`** — filters null elements from a sequence; the return type is non-nullable. Works for both reference types and nullable value types:
-
-```csharp
-new[] { "a", null, "b" }.WhereNotNull()    // → ["a", "b"]
-new int?[] { 1, null, 3 }.WhereNotNull()   // → [1, 3]
-```
-
-### Numbers (`AboExtensions.Numbers`)
+## Numbers (`AboExtensions.Numbers`)
 
 ```csharp
 using AboExtensions.Numbers;
@@ -193,8 +171,8 @@ decimal? m = null; m.Or(9.9m)  // → 9.9m
 **`IsBetween`** — range check, inclusive by default:
 
 ```csharp
-5.IsBetween(1, 10)              // → true
-1.IsBetween(1, 10)              // → true  (inclusive)
+5.IsBetween(1, 10)                    // → true
+1.IsBetween(1, 10)                    // → true  (inclusive)
 1.IsBetween(1, 10, inclusive: false)  // → false (exclusive)
 ```
 
@@ -256,26 +234,93 @@ float.PositiveInfinity.IsNanOrInf() // → true
 21.ToOrdinal()    // → "21st"
 ```
 
-### Complex Numbers (`AboExtensions.ComplexNumbers`)
+**`RomanEncode`** — converts a positive integer to a Roman numeral string. Range: 1–3999:
 
 ```csharp
-using AboExtensions.ComplexNumbers;
+1.RomanEncode()       // → "I"
+4.RomanEncode()       // → "IV"
+1994.RomanEncode()    // → "MCMXCIV"
+3999.RomanEncode()    // → "MMMCMXCIX"
+// throws ArgumentOutOfRangeException if outside 1–3999
 ```
 
-**`ToMathString`** — formats a complex number in standard mathematical notation `a+bi`, omitting zero parts and the coefficient `1` before `i`:
+**`RomanDecode`** — converts a Roman numeral string to an integer. Case-insensitive:
 
 ```csharp
-new Complex(1, 2).ToMathString()    // → "1+2i"
-new Complex(1, -2).ToMathString()   // → "1-2i"
-new Complex(0, 2).ToMathString()    // → "2i"
-new Complex(1, 0).ToMathString()    // → "1"
-new Complex(0, 0).ToMathString()    // → "0"
-new Complex(0, 1).ToMathString()    // → "i"
-new Complex(0, -1).ToMathString()   // → "-i"
-new Complex(1, 1).ToMathString()    // → "1+i"
+"XIV".RomanDecode()     // → 14
+"MCMXCIV".RomanDecode() // → 1994
+"xiv".RomanDecode()     // → 14
 ```
 
-### Dates (`AboExtensions.Dates`)
+---
+
+## Lists (`AboExtensions.Lists`)
+
+```csharp
+using AboExtensions.Lists;
+```
+
+**`ForEach`** — executes an action for each element of any `IEnumerable` (LINQ doesn't have this):
+
+```csharp
+new[] { 1, 2, 3 }.ForEach(x => Console.WriteLine(x));
+```
+
+**`None`** — the opposite of `Any`: returns `true` if no element satisfies the predicate:
+
+```csharp
+new[] { 1, 2, 3 }.None(x => x > 10)    // → true
+new[] { 1, 2, 3 }.None(x => x > 2)     // → false
+```
+
+**`IsNullOrEmpty`** — checks if a collection is null or empty:
+
+```csharp
+((IEnumerable<int>?)null).IsNullOrEmpty()    // → true
+Array.Empty<int>().IsNullOrEmpty()           // → true
+new[] { 1 }.IsNullOrEmpty()                 // → false
+```
+
+**`Batch`** — splits a sequence into chunks of the given size; the last batch may be smaller:
+
+```csharp
+new[] { 1, 2, 3, 4, 5 }.Batch(2)   // → [[1,2], [3,4], [5]]
+new[] { 1, 2 }.Batch(10)            // → [[1,2]]
+```
+
+**`Shuffle`** — returns a new shuffled list (Fisher-Yates), does not mutate the original:
+
+```csharp
+new List<int> { 1, 2, 3, 4, 5 }.Shuffle()   // → e.g. [3, 1, 5, 2, 4]
+```
+
+**`WhereNotNull`** — filters null elements from a sequence; the return type is non-nullable. Works for both reference types and nullable value types:
+
+```csharp
+new[] { "a", null, "b" }.WhereNotNull()    // → ["a", "b"]
+new int?[] { 1, null, 3 }.WhereNotNull()   // → [1, 3]
+```
+
+**`Flatten`** — flattens a sequence of sequences into a single list:
+
+```csharp
+new[] { new[] { 1, 2 }, new[] { 3, 4 } }.Flatten()   // → [1, 2, 3, 4]
+new[] { new[] { "a" }, new[] { "b", "c" } }.Flatten() // → ["a", "b", "c"]
+```
+
+**`Frequencies`** — counts occurrences of each element, returning a `Dictionary<T, int>`:
+
+```csharp
+new[] { "a", "b", "a", "c", "a", "b" }.Frequencies()
+// → { "a": 3, "b": 2, "c": 1 }
+
+new[] { 1, 2, 1, 1 }.Frequencies()
+// → { 1: 3, 2: 1 }
+```
+
+---
+
+## Dates (`AboExtensions.Dates`)
 
 ```csharp
 using AboExtensions.Dates;
@@ -336,7 +381,212 @@ new DateTime(2024, 1, 10).NextWeekday(DayOfWeek.Friday)   // Wednesday → 2024-
 new DateTime(2024, 1, 8).NextWeekday(DayOfWeek.Monday)    // Monday → next Monday 2024-01-15
 ```
 
-### Nullables (`AboExtensions.Nullables`)
+---
+
+## Booleans (`AboExtensions.Booleans`)
+
+```csharp
+using AboExtensions.Booleans;
+```
+
+**`Toggle`** — returns the opposite boolean value:
+
+```csharp
+true.Toggle()     // → false
+false.Toggle()    // → true
+
+isActive = isActive.Toggle();
+```
+
+---
+
+## Chars (`AboExtensions.Chars`)
+
+```csharp
+using AboExtensions.Chars;
+```
+
+**`IsUnicodeLetter`** / **`IsVowel`** / **`IsConsonant`** — character classification:
+
+```csharp
+'a'.IsUnicodeLetter()    // → true
+'3'.IsUnicodeLetter()    // → false
+'e'.IsVowel()            // → true
+'b'.IsConsonant()        // → true
+```
+
+**`IsAscii`** — true if the character code is ≤ 127:
+
+```csharp
+'A'.IsAscii()    // → true
+'é'.IsAscii()    // → false
+```
+
+**`Repeat`** — repeats a character n times into a string:
+
+```csharp
+'-'.Repeat(5)    // → "-----"
+'x'.Repeat(0)    // → ""
+```
+
+**`Rot13`** — applies the ROT13 cipher. Non-letter characters are unchanged:
+
+```csharp
+'A'.Rot13()    // → 'N'
+'n'.Rot13()    // → 'a'
+'3'.Rot13()    // → '3'
+```
+
+---
+
+## Complex Numbers (`AboExtensions.ComplexNumbers`)
+
+```csharp
+using AboExtensions.ComplexNumbers;
+```
+
+**`ToMathString`** — formats a complex number in standard mathematical notation `a+bi`, omitting zero parts and the coefficient `1` before `i`:
+
+```csharp
+new Complex(1, 2).ToMathString()    // → "1+2i"
+new Complex(1, -2).ToMathString()   // → "1-2i"
+new Complex(0, 2).ToMathString()    // → "2i"
+new Complex(1, 0).ToMathString()    // → "1"
+new Complex(0, 0).ToMathString()    // → "0"
+new Complex(0, 1).ToMathString()    // → "i"
+new Complex(0, -1).ToMathString()   // → "-i"
+new Complex(1, 1).ToMathString()    // → "1+i"
+```
+
+---
+
+## Dictionaries (`AboExtensions.Dictionaries`)
+
+```csharp
+using AboExtensions.Dictionaries;
+```
+
+**`AddOrUpdate`** — adds or updates a key/value pair; returns the dictionary for chaining:
+
+```csharp
+dict.AddOrUpdate("key", 42)    // adds if missing, overwrites if present
+
+new Dictionary<string, int>()
+    .AddOrUpdate("a", 1)
+    .AddOrUpdate("b", 2);      // chaining
+```
+
+**`Invert`** — swaps keys and values. Throws `ArgumentException` on duplicate values by default:
+
+```csharp
+new Dictionary<string, int> { ["a"] = 1, ["b"] = 2 }.Invert()
+// → { 1: "a", 2: "b" }
+
+// silently keep last value on duplicate:
+dict.Invert(throwOnDuplicate: false)
+```
+
+---
+
+## Enums (`AboExtensions.Enums`)
+
+```csharp
+using AboExtensions.Enums;
+```
+
+**`GetValues<T>`** — returns all values of an enum type:
+
+```csharp
+EnumExtensions.GetValues<DayOfWeek>()
+// → [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+
+foreach (var status in EnumExtensions.GetValues<OrderStatus>())
+    Console.WriteLine(status);
+```
+
+---
+
+## Exceptions (`AboExtensions.Exceptions`)
+
+```csharp
+using AboExtensions.Exceptions;
+```
+
+**`GetRootCause`** — walks the `InnerException` chain and returns the deepest exception:
+
+```csharp
+new Exception("outer", new Exception("mid", new Exception("root")))
+    .GetRootCause().Message    // → "root"
+
+new Exception("no inner").GetRootCause().Message    // → "no inner"
+```
+
+**`Flatten`** — returns all exceptions in the chain as a flat sequence, outermost first:
+
+```csharp
+new Exception("a", new Exception("b", new Exception("c")))
+    .Flatten()
+    .Select(e => e.Message)    // → ["a", "b", "c"]
+```
+
+---
+
+## Guids (`AboExtensions.Guids`)
+
+```csharp
+using AboExtensions.Guids;
+```
+
+**`IsEmpty`** / **`IsNotEmpty`** — checks against `Guid.Empty`:
+
+```csharp
+Guid.Empty.IsEmpty()       // → true
+Guid.NewGuid().IsEmpty()   // → false
+```
+
+**`OrNew`** — returns the Guid if not empty, otherwise generates a new one:
+
+```csharp
+Guid.Empty.OrNew()       // → new Guid
+Guid.NewGuid().OrNew()   // → same Guid (unchanged)
+```
+
+---
+
+## IP Addresses (`AboExtensions.IpAddresses`)
+
+```csharp
+using AboExtensions.IpAddresses;
+```
+
+**`IsValidIp`** — true if the string is a valid IPv4 or IPv6 address:
+
+```csharp
+"192.168.1.1".IsValidIp()    // → true
+"::1".IsValidIp()            // → true  (IPv6 loopback)
+"256.0.0.1".IsValidIp()      // → false
+"hello".IsValidIp()          // → false
+```
+
+**`IsValidIpV4`** / **`IsValidIpV6`** — version-specific validation:
+
+```csharp
+"192.168.1.1".IsValidIpV4()   // → true
+"::1".IsValidIpV4()           // → false
+"::1".IsValidIpV6()           // → true
+"192.168.1.1".IsValidIpV6()   // → false
+```
+
+**`ToIpAddress`** — parses to `IPAddress?`, returning null if invalid:
+
+```csharp
+"192.168.1.1".ToIpAddress()   // → IPAddress { 192.168.1.1 }
+"invalid".ToIpAddress()       // → null
+```
+
+---
+
+## Nullables (`AboExtensions.Nullables`)
 
 ```csharp
 using AboExtensions.Nullables;
@@ -355,38 +605,82 @@ int? score = 42;
 score.IfNotNull(s => Console.WriteLine(s));  // prints "42"
 ```
 
-### Booleans (`AboExtensions.Booleans`)
+**`MapNotNull`** — transforms a nullable value with a function, returning `default` if null:
 
 ```csharp
-using AboExtensions.Booleans;
+string? s = "hello";
+s.MapNotNull(x => x.Length)      // → 5
+s.MapNotNull(x => x.ToUpper())   // → "HELLO"
+
+string? n = null;
+n.MapNotNull(x => x.Length)      // → 0 (default int)
+n.MapNotNull(x => x.ToUpper())   // → null
+
+// chaining:
+"42".MapNotNull(int.Parse).MapNotNull(n => n * 2)   // → 84
 ```
 
-**`Toggle`** — returns the opposite boolean value:
+---
+
+## Objects (`AboExtensions.Objects`)
 
 ```csharp
-true.Toggle()     // → false
-false.Toggle()    // → true
-
-isActive = isActive.Toggle();
+using AboExtensions.Objects;
 ```
 
-### Enums (`AboExtensions.Enums`)
+**`IsNull`** / **`IsNotNull`** — readable null checks on any object:
 
 ```csharp
-using AboExtensions.Enums;
+((string?)null).IsNull()     // → true
+"hello".IsNull()             // → false
+"hello".IsNotNull()          // → true
 ```
 
-**`GetValues<T>`** — returns all values of an enum type:
+---
+
+## Randoms (`AboExtensions.Randoms`)
 
 ```csharp
-EnumExtensions.GetValues<DayOfWeek>()
-// → [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
-
-foreach (var status in EnumExtensions.GetValues<OrderStatus>())
-    Console.WriteLine(status);
+using AboExtensions.Randoms;
 ```
 
-### Reflection (`AboExtensions.Reflections`)
+**`NextBool`** — returns `true` or `false` with 50/50 probability, or with a given probability:
+
+```csharp
+rng.NextBool()          // → true or false (50%)
+rng.NextBool(0.9)       // → true ~90% of the time
+rng.NextBool(1.0)       // → always true
+rng.NextBool(0.0)       // → always false
+```
+
+**`NextItem`** — returns a random element from a list:
+
+```csharp
+rng.NextItem(new[] { "a", "b", "c" })   // → "a", "b" or "c"
+```
+
+**`RandomItem`** — extension on `IList<T>`, picks a random element without needing a `Random` instance:
+
+```csharp
+new[] { 1, 2, 3 }.RandomItem()   // → 1, 2 or 3
+```
+
+**`NextEnum`** — returns a random value of an enum:
+
+```csharp
+rng.NextEnum<DayOfWeek>()   // → one of the 7 days
+```
+
+**`NextString`** — generates a random string of the given length from a character pool:
+
+```csharp
+rng.NextString(8)                   // → e.g. "k4f2m9xr"  (alphanumeric + - _)
+rng.NextString(4, "AEIOU")          // → e.g. "OEUA"
+```
+
+---
+
+## Reflection (`AboExtensions.Reflections`)
 
 ```csharp
 using AboExtensions.Reflections;
@@ -408,6 +702,62 @@ ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName")        
 ReflectionExtensions.GetPropertiesToString(person, "FirstName,LastName", outSep: '-') // → "Mario-Rossi"
 ReflectionExtensions.GetPropertiesToString(person, "FirstName;LastName", inSep: ';')  // → "Mario Rossi"
 ```
+
+---
+
+## StringBuilders (`AboExtensions.StringBuilders`)
+
+```csharp
+using AboExtensions.StringBuilders;
+```
+
+**`AppendIf`** — appends text only if the condition is true; returns the builder for chaining:
+
+```csharp
+new StringBuilder()
+    .AppendIf(true, "hello")
+    .AppendIf(false, " world")
+    .ToString()    // → "hello"
+```
+
+**`AppendLineIf`** — like `AppendIf` but also appends a newline:
+
+```csharp
+new StringBuilder()
+    .AppendLineIf(true, "line1")
+    .AppendLineIf(false, "line2")
+    .ToString()    // → "line1\r\n"
+```
+
+**`Prepend`** — inserts text at the beginning of the builder:
+
+```csharp
+new StringBuilder("world").Prepend("hello ").ToString()   // → "hello world"
+```
+
+---
+
+## TimeSpans (`AboExtensions.TimeSpans`)
+
+```csharp
+using AboExtensions.TimeSpans;
+```
+
+**`IsZero`** — true if the TimeSpan equals `TimeSpan.Zero`:
+
+```csharp
+TimeSpan.Zero.IsZero()              // → true
+TimeSpan.FromSeconds(1).IsZero()    // → false
+```
+
+**`Ago`** / **`FromNow`** — converts a TimeSpan to a `DateTime` relative to now:
+
+```csharp
+TimeSpan.FromHours(2).Ago()       // → DateTime.Now - 2 hours
+TimeSpan.FromDays(1).FromNow()    // → DateTime.Now + 1 day
+```
+
+---
 
 ## Requirements
 
