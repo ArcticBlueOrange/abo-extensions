@@ -119,4 +119,97 @@ public class TestDateExtensions
     [InlineData(2024, 1, 12, DayOfWeek.Monday, 2024, 1, 15)]  // Friday → next Monday
     public void TestNextWeekday(int y, int m, int d, DayOfWeek day, int ey, int em, int ed) =>
         Assert.Equal(new DateTime(ey, em, ed), new DateTime(y, m, d).NextWeekday(day));
+
+    // ToUnixTimestamp
+
+    [Fact]
+    public void ToUnixTimestamp_Epoch_IsZero() =>
+        Assert.Equal(0L, DateTime.UnixEpoch.ToUnixTimestamp());
+
+    [Fact]
+    public void ToUnixTimestamp_KnownUtcDate()
+    {
+        var dt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        Assert.Equal(1704067200L, dt.ToUnixTimestamp());
+    }
+
+    [Fact]
+    public void ToUnixTimestamp_LocalConvertedToUtc()
+    {
+        var utc = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var local = utc.ToLocalTime();
+        Assert.Equal(utc.ToUnixTimestamp(), local.ToUnixTimestamp());
+    }
+
+    [Fact]
+    public void ToUnixTimestamp_UnspecifiedTreatedAsUtc()
+    {
+        var unspecified = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        var utc = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        Assert.Equal(utc.ToUnixTimestamp(), unspecified.ToUnixTimestamp());
+    }
+
+    [Fact]
+    public void ToUnixTimestamp_ThrowOnUnspecified_Throws() =>
+        Assert.Throws<InvalidOperationException>(() =>
+            new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Unspecified)
+                .ToUnixTimestamp(throwOnUnspecified: true));
+
+    // ToUnixTimestampMs
+
+    [Fact]
+    public void ToUnixTimestampMs_Epoch_IsZero() =>
+        Assert.Equal(0L, DateTime.UnixEpoch.ToUnixTimestampMs());
+
+    [Fact]
+    public void ToUnixTimestampMs_IsSecondsTimesThousand()
+    {
+        var dt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        Assert.Equal(dt.ToUnixTimestamp() * 1000L, dt.ToUnixTimestampMs());
+    }
+
+    [Fact]
+    public void ToUnixTimestampMs_CapturesMilliseconds()
+    {
+        var dt = new DateTime(2024, 1, 1, 0, 0, 0, 500, DateTimeKind.Utc);
+        Assert.Equal(dt.ToUnixTimestamp() * 1000L + 500L, dt.ToUnixTimestampMs());
+    }
+
+    // FromUnixTimestamp
+
+    [Fact]
+    public void FromUnixTimestamp_Zero_IsEpoch() =>
+        Assert.Equal(DateTime.UnixEpoch, 0L.FromUnixTimestamp());
+
+    [Fact]
+    public void FromUnixTimestamp_KnownValue() =>
+        Assert.Equal(new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc), 1704067200L.FromUnixTimestamp());
+
+    [Fact]
+    public void FromUnixTimestamp_ReturnsUtc() =>
+        Assert.Equal(DateTimeKind.Utc, 0L.FromUnixTimestamp().Kind);
+
+    [Fact]
+    public void FromUnixTimestamp_RoundTrip()
+    {
+        var dt = new DateTime(2024, 6, 15, 12, 30, 0, DateTimeKind.Utc);
+        Assert.Equal(dt, dt.ToUnixTimestamp().FromUnixTimestamp());
+    }
+
+    // FromoUnixTimestampMs
+
+    [Fact]
+    public void FromUnixTimestampMs_Zero_IsEpoch() =>
+        Assert.Equal(DateTime.UnixEpoch, 0L.FromoUnixTimestampMs());
+
+    [Fact]
+    public void FromUnixTimestampMs_ReturnsUtc() =>
+        Assert.Equal(DateTimeKind.Utc, 0L.FromoUnixTimestampMs().Kind);
+
+    [Fact]
+    public void FromUnixTimestampMs_RoundTrip()
+    {
+        var dt = new DateTime(2024, 6, 15, 12, 30, 0, 500, DateTimeKind.Utc);
+        Assert.Equal(dt, dt.ToUnixTimestampMs().FromoUnixTimestampMs());
+    }
 }

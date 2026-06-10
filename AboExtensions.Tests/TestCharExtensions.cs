@@ -18,7 +18,6 @@ public class TestCharExtensions
         Assert.Equal(1.0, '█'.Luminosity());
 
     // Luminosity - shade characters
-
     [Theory]
     [InlineData('░', 0.25)]
     [InlineData('▒', 0.5)]

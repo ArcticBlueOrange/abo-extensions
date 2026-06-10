@@ -63,7 +63,7 @@ public static class ListExtensions
 
     public static List<T> Flatten<T>(this IEnumerable<IEnumerable<T>> l) where T : class
     {
-        List<T> values = new List<T>();
+        List<T> values = [];
 
         foreach (var sl in l)
             foreach (var i in sl)

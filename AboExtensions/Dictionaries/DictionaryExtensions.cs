@@ -37,8 +37,8 @@ public static class DictionaryExtensions
             if (nk == null)
                 throw new ArgumentNullException(nameof(nk));
 
-            if (ret.ContainsKey(nk) && throwOnDuplicate)
-                throw new ArgumentException($"Duplicate Key: {ret[nk]}");
+            if (ret.TryGetValue(nk, out K? value) && throwOnDuplicate)
+                throw new ArgumentException($"Duplicate Key: {value}");
             ret[nk] = nv;
         }
         return ret;

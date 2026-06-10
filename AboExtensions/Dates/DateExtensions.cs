@@ -42,39 +42,43 @@ public static class DateExtensions
     }
 
     public static bool IsToday(this DateTime d) => d.Date == DateTime.Today;
-    // TODO: IsToday(this DateTime d) : bool 
-    //   Descrizione: true se la data coincide con oggi (confronta solo la parte Date).
-    //   Esempi: DateTime.Today.IsToday()            → true
-    //           DateTime.Today.AddDays(1).IsToday() → false
 
     public static bool IsYesterday(this DateTime d) => d.Date == Yesterday;
-    // TODO: IsYesterday(this DateTime d) : bool
-    //   Descrizione: true se la data coincide con ieri (confronta solo la parte Date).
-    //   Esempi: DateTime.Today.AddDays(-1).IsYesterday() → true
 
     public static bool IsTomorrow(this DateTime d) => d.Date == Tomorrow;
-    // TODO: IsTomorrow(this DateTime d) : bool
-    //   Descrizione: true se la data coincide con domani (confronta solo la parte Date).
-    //   Esempi: DateTime.Today.AddDays(1).IsTomorrow() → true
 
     public static bool IsSameDay(this DateTime d, DateTime o) => d.Date == o.Date;
-    // TODO: IsSameDay(this DateTime d, DateTime other) : bool
-    //   Descrizione: true se d e other hanno la stessa data (anno, mese, giorno),
-    //   ignorando la componente oraria.
-    //   Esempi: new DateTime(2024,6,1,10,0,0).IsSameDay(new DateTime(2024,6,1,22,0,0)) → true
-    //           new DateTime(2024,6,1).IsSameDay(new DateTime(2024,6,2)) → false
 
-    // TODO: Elapsed(this DateTime d) : TimeSpan
-    //   Descrizione: restituisce il tempo trascorso da d a DateTime.Now.
-    //   Per date future il TimeSpan sarà negativo.
-    //   Esempi: DateTime.Now.AddHours(-2).Elapsed() → circa TimeSpan(2, 0, 0)
-    //           DateTime.Now.AddDays(1).Elapsed()   → TimeSpan negativo (~-24h)
+    /// <summary>
+    ///   Descrizione: restituisce il tempo trascorso da d a DateTime.Now.
+    /// </summary>
+    /// <param name="d"></param>
+    /// <returns></returns>
+    public static TimeSpan Elapsed(this DateTime d) => DateTime.Now - d.Date;
 
-    // TODO: ToUnixTimestamp(this DateTime d) : long
-    //   Descrizione: converte la data in secondi Unix (secondi dall'epoch 1970-01-01 UTC).
-    //   Tratta la data come UTC se Kind == Utc, altrimenti come locale.
-    //   Esempi: new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToUnixTimestamp() → 0
-    //           new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToUnixTimestamp() → 1704067200
+    public static long ToUnixTimestamp(this DateTime d, bool throwOnUnspecified = false)
+    {
+        if (d.Kind == DateTimeKind.Local)
+            d = d.ToUniversalTime();
+        if (d.Kind == DateTimeKind.Unspecified && throwOnUnspecified)
+            throw new InvalidOperationException("Unspecified DateTime Kind");
+
+        return Convert.ToInt64((d - DateTime.UnixEpoch).TotalSeconds);
+    }
+    public static long ToUnixTimestampMs(this DateTime d, bool throwOnUnspecified = false)
+    {
+        if (d.Kind == DateTimeKind.Local)
+            d = d.ToUniversalTime();
+        if (d.Kind != DateTimeKind.Unspecified && throwOnUnspecified)
+            throw new InvalidOperationException("Unspecified DateTime Kind");
+
+        return Convert.ToInt64((d - DateTime.UnixEpoch).TotalMilliseconds);
+    }
+
+    public static DateTime FromUnixTimestamp(this long d)
+        => DateTime.UnixEpoch + TimeSpan.FromSeconds(d);
+    public static DateTime FromoUnixTimestampMs(this long d)
+        => DateTime.UnixEpoch + TimeSpan.FromMilliseconds(d);
 
     public static DateTime Yesterday => DateTime.Today.AddDays(-1);
 

@@ -15,7 +15,7 @@ dotnet add package AboExtensions
 | `Booleans` | `Toggle` |
 | `Chars` | `IsUnicodeLetter`, `IsVowel`, `IsConsonant`, `IsAscii`, `Repeat`, `Rot13`, `Luminosity` |
 | `ComplexNumbers` | `ToMathString` |
-| `Dates` | `IsWeekend`, `IsWeekday`, `StartOfDay`, `EndOfDay`, `StartOfWeek`, `Age`, `IsInThePast`, `IsInTheFuture`, `Quarter`, `AddWorkdays`, `NextWeekday` |
+| `Dates` | `IsWeekend`, `IsWeekday`, `StartOfDay`, `EndOfDay`, `StartOfWeek`, `Age`, `IsInThePast`, `IsInTheFuture`, `Quarter`, `AddWorkdays`, `NextWeekday`, `ToUnixTimestamp`, `ToUnixTimestampMs`, `FromUnixTimestamp`, `FromoUnixTimestampMs` |
 | `Dictionaries` | `AddOrUpdate`, `Invert` |
 | `Enums` | `GetValues` |
 | `Exceptions` | `GetRootCause`, `Flatten` |
@@ -379,6 +379,24 @@ new DateTime(2024, 1, 10).AddWorkdays(-3)  // Wednesday - 3 workdays → Friday 
 ```csharp
 new DateTime(2024, 1, 10).NextWeekday(DayOfWeek.Friday)   // Wednesday → 2024-01-12
 new DateTime(2024, 1, 8).NextWeekday(DayOfWeek.Monday)    // Monday → next Monday 2024-01-15
+```
+
+**`ToUnixTimestamp`** / **`ToUnixTimestampMs`** — converts a `DateTime` to a Unix timestamp in seconds or milliseconds. `Local` is converted to UTC; `Unspecified` is treated as UTC by default (pass `throwOnUnspecified: true` to enforce strictness):
+
+```csharp
+DateTime.UnixEpoch.ToUnixTimestamp()                                          // → 0
+new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToUnixTimestamp()        // → 1704067200
+new DateTime(2024, 1, 1, 0, 0, 0, 500, DateTimeKind.Utc).ToUnixTimestampMs() // → 1704067200500
+```
+
+**`FromUnixTimestamp`** / **`FromoUnixTimestampMs`** — converts a Unix timestamp back to a `DateTime` with `Kind = Utc`:
+
+```csharp
+0L.FromUnixTimestamp()           // → DateTime.UnixEpoch (1970-01-01 00:00:00 UTC)
+1704067200L.FromUnixTimestamp()  // → 2024-01-01 00:00:00 UTC
+
+// round-trip:
+dt.ToUnixTimestamp().FromUnixTimestamp() == dt   // → true
 ```
 
 ---

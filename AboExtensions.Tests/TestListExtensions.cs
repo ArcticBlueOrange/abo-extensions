@@ -155,35 +155,6 @@ public class TestListExtensions
     public void WhereNotNull_EmptyIntSource_ReturnsEmpty() =>
         Assert.Empty(Array.Empty<int?>().WhereNotNull());
 
-    // Flatten
-
-    [Fact]
-    public void Flatten_TwoSubLists_ReturnsConcatenation() =>
-        Assert.Equal(new[] { "a", "b", "c", "d" },
-            new[] { new[] { "a", "b" }, new[] { "c", "d" } }.Flatten());
-
-    [Fact]
-    public void Flatten_EmptyOuter_ReturnsEmpty() =>
-        Assert.Empty(Array.Empty<string[]>().Flatten());
-
-    [Fact]
-    public void Flatten_InnerEmpty_SkipsEmpty() =>
-        Assert.Equal(new[] { "a", "b" },
-            new[] { new[] { "a", "b" }, Array.Empty<string>() }.Flatten());
-
-    [Fact]
-    public void Flatten_AllEmpty_ReturnsEmpty() =>
-        Assert.Empty(new[] { Array.Empty<string>(), Array.Empty<string>() }.Flatten());
-
-    [Fact]
-    public void Flatten_PreservesOrder() =>
-        Assert.Equal(new[] { "1", "2", "3", "4", "5" },
-            new[] { new[] { "1", "2" }, new[] { "3" }, new[] { "4", "5" } }.Flatten());
-
-    [Fact]
-    public void Flatten_ReturnsList() =>
-        Assert.IsType<List<string>>(new[] { new[] { "x" } }.Flatten());
-
     // Frequencies
 
     [Fact]

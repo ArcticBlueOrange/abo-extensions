@@ -9,7 +9,7 @@ public static class ComplexExtensions
     {
         if (c == 0) return "0";
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
 
         if (c.Real != 0)
             sb.Append(c.Real);
