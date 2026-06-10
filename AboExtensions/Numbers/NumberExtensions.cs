@@ -146,7 +146,7 @@ public static class NumberExtensions
             while (td.StartsWith(d.Value))
             {
                 cum += d.Key;
-                td = td.Substring(d.Value.Length);
+                td = td[d.Value.Length..];
                 cnt++;
                 if (cnt > counters[d.Key])
                     throw new FormatException("Invalid Roman Numeral");
