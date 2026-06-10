@@ -13,7 +13,7 @@ dotnet add package AboExtensions
 | Namespace | Methods |
 |-----------|---------|
 | `Booleans` | `Toggle` |
-| `Chars` | `IsUnicodeLetter`, `IsVowel`, `IsConsonant`, `IsAscii`, `Repeat`, `Rot13` |
+| `Chars` | `IsUnicodeLetter`, `IsVowel`, `IsConsonant`, `IsAscii`, `Repeat`, `Rot13`, `Luminosity` |
 | `ComplexNumbers` | `ToMathString` |
 | `Dates` | `IsWeekend`, `IsWeekday`, `StartOfDay`, `EndOfDay`, `StartOfWeek`, `Age`, `IsInThePast`, `IsInTheFuture`, `Quarter`, `AddWorkdays`, `NextWeekday` |
 | `Dictionaries` | `AddOrUpdate`, `Invert` |
@@ -24,7 +24,7 @@ dotnet add package AboExtensions
 | `Lists` | `ForEach`, `None`, `IsNullOrEmpty`, `Batch`, `Shuffle`, `WhereNotNull`, `Flatten`, `Frequencies` |
 | `Numbers` | `Or`, `Clamp`, `IsBetween`, `Abs`, `Percentage`, `Round`, `IsNanOrInf`, `IsNotNanNorInf`, `IsEven`, `IsOdd`, `Digits`, `ToOrdinal`, `RomanEncode`, `RomanDecode` |
 | `Nullables` | `IfNotNull`, `MapNotNull` |
-| `Objects` | `IsNull`, `IsNotNull` |
+| `Objects` | `IsNull`, `IsNotNull`, `Also`, `Let`, `In`, `NotIn` |
 | `Randoms` | `NextBool`, `NextItem`, `RandomItem`, `NextEnum`, `NextString` |
 | `Reflections` | `GetPropertyByName`, `GetPropertiesToString` |
 | `StringBuilders` | `AppendIf`, `AppendLineIf`, `Prepend` |
@@ -437,6 +437,22 @@ using AboExtensions.Chars;
 '3'.Rot13()    // → '3'
 ```
 
+**`Luminosity`** — returns the visual density of a character as a `double` in `[0.0, 1.0]`, where `' '` is empty and `'█'` is full. Useful for ASCII art and terminal rendering:
+
+```csharp
+' '.Luminosity()    // → 0.0
+'.'.Luminosity()    // → 0.05
+'i'.Luminosity()    // → 0.15
+'a'.Luminosity()    // → 0.35  (Unicode category fallback)
+'W'.Luminosity()    // → 0.65
+'@'.Luminosity()    // → 0.75
+'░'.Luminosity()    // → 0.25
+'▒'.Luminosity()    // → 0.5
+'▓'.Luminosity()    // → 0.75
+'█'.Luminosity()    // → 1.0
+// lower bar blocks are proportional (▁→0.125 … █→1.0)
+```
+
 ---
 
 ## Complex Numbers (`AboExtensions.ComplexNumbers`)
@@ -634,6 +650,38 @@ using AboExtensions.Objects;
 ((string?)null).IsNull()     // → true
 "hello".IsNull()             // → false
 "hello".IsNotNull()          // → true
+```
+
+**`Also`** — executes a side-effect on the object and returns it unchanged, for use inside fluent pipelines:
+
+```csharp
+user.Also(u => { logger.Log(u.Name); return true; })
+    .Save();
+
+// chaining:
+"hello"
+    .Also(s => { log.Add(s); return true; })
+    .Also(s => { log.Add(s.ToUpper()); return true; });
+// log → ["hello", "HELLO"], result → "hello"
+```
+
+**`Let`** — applies a transformation and returns the result; readable alternative to a temporary variable:
+
+```csharp
+"42".Let(int.Parse)              // → 42
+"hello".Let(s => s.Length)       // → 5
+5.Let(n => n.ToString())         // → "5"
+
+// chaining:
+"42".Let(int.Parse).Let(n => n * 2)   // → 84
+```
+
+**`In`** / **`NotIn`** — checks whether a value is (or isn't) in a set of candidates; readable alternative to chained `||`:
+
+```csharp
+status.In(Active, Pending)          // → true if status is either
+"x".In("a", "b", "c")              // → false
+status.NotIn(Deleted, Archived)     // → true if status is neither
 ```
 
 ---
