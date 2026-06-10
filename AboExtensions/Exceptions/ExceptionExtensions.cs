@@ -22,7 +22,7 @@ public static class ExceptionExtensions
     // TODO: ToLogString(this Exception ex, bool includeStackTrace = true) : string
     //   Descrizione: formatta l'eccezione e tutta la sua catena in una stringa
     //   leggibile per il logging. Include tipo, messaggio e opzionalmente lo stack trace.
-    //   Parametri: includeStackTrace — se true include lo stack trace (default true).
+    //   Parametri: includeStackTrace - se true include lo stack trace (default true).
     //   Esempi: ex.ToLogString()
     //               → "[ArgumentNullException] Value cannot be null.\n  at ...\n"
     //                  "---> [InvalidOperationException] Inner message.\n  at ..."

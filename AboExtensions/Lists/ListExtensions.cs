@@ -87,7 +87,7 @@ public static class ListExtensions
     // TODO: Paginate<T>(this IEnumerable<T> source, int page, int pageSize) : IEnumerable<T>
     //   Descrizione: restituisce gli elementi della pagina richiesta (1-based).
     //   Lancia ArgumentOutOfRangeException se page < 1 o pageSize < 1.
-    //   Parametri: page — numero di pagina (da 1); pageSize — elementi per pagina.
+    //   Parametri: page - numero di pagina (da 1); pageSize - elementi per pagina.
     //   Esempi: new[] {1,2,3,4,5}.Paginate(1, 2) → [1, 2]
     //           new[] {1,2,3,4,5}.Paginate(2, 2) → [3, 4]
     //           new[] {1,2,3,4,5}.Paginate(3, 2) → [5]

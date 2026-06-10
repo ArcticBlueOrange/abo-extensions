@@ -1,6 +1,6 @@
 namespace AboExtensions.Helpers;
 
-// TODO: Disposable — classe helper per creare IDisposable da una lambda,
+// TODO: Disposable - classe helper per creare IDisposable da una lambda,
 //   utile per il pattern using senza dover creare classi dedicate.
 //
 //   Factory method statico:

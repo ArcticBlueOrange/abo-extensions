@@ -135,7 +135,7 @@ public class TestObjectExtensions
     public void Let_WorksOnValueType() =>
         Assert.Equal("5", 5.Let(n => n.ToString()));
 
-    // In / NotIn — null values
+    // In / NotIn - null values
 
     [Fact]
     public void In_NullValueInArray_ReturnsTrue() =>

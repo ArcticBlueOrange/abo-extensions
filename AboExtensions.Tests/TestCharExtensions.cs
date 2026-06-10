@@ -5,9 +5,9 @@ namespace AboExtensions.Tests;
 public class TestCharExtensions
 {
     // IsUnicodeLetter / IsVowel / IsConsonant / IsAscii / Repeat / Rot13
-    // (covered by TODO AGG. TEST note in source — skipped here, focus on Luminosity)
+    // (- skipped here, focus on Luminosity)
 
-    // Luminosity — extremes
+    // Luminosity - extremes
 
     [Fact]
     public void Luminosity_Space_IsZero() =>
@@ -17,7 +17,7 @@ public class TestCharExtensions
     public void Luminosity_FullBlock_IsOne() =>
         Assert.Equal(1.0, '█'.Luminosity());
 
-    // Luminosity — shade characters
+    // Luminosity - shade characters
 
     [Theory]
     [InlineData('░', 0.25)]
@@ -26,7 +26,7 @@ public class TestCharExtensions
     public void Luminosity_Shades(char c, double expected) =>
         Assert.Equal(expected, c.Luminosity());
 
-    // Luminosity — lower bar blocks (proportional)
+    // Luminosity - lower bar blocks (proportional)
 
     [Theory]
     [InlineData('▁', 1.0 / 8)]
@@ -40,7 +40,7 @@ public class TestCharExtensions
     public void Luminosity_BarBlocks_Proportional(char c, double expected) =>
         Assert.Equal(expected, c.Luminosity(), precision: 10);
 
-    // Luminosity — thin chars are lighter than heavy chars
+    // Luminosity - thin chars are lighter than heavy chars
 
     [Fact]
     public void Luminosity_ThinLighterThanNormal() =>
@@ -54,7 +54,7 @@ public class TestCharExtensions
     public void Luminosity_HeavyLighterThanBlock() =>
         Assert.True('@'.Luminosity() < '█'.Luminosity());
 
-    // Luminosity — explicit known values
+    // Luminosity - explicit known values
 
     [Theory]
     [InlineData('.', 0.05)]
@@ -67,7 +67,7 @@ public class TestCharExtensions
     public void Luminosity_KnownValues(char c, double expected) =>
         Assert.Equal(expected, c.Luminosity());
 
-    // Luminosity — Unicode category fallback
+    // Luminosity - Unicode category fallback
 
     [Fact]
     public void Luminosity_LowercaseLetter_Is035() =>
@@ -81,7 +81,7 @@ public class TestCharExtensions
     public void Luminosity_ControlChar_IsZero() =>
         Assert.Equal(0.0, '\n'.Luminosity());
 
-    // Luminosity — all printable ASCII in [0.0, 1.0]
+    // Luminosity - all printable ASCII in [0.0, 1.0]
 
     [Fact]
     public void Luminosity_AllPrintableAscii_InRange() =>
@@ -89,7 +89,7 @@ public class TestCharExtensions
             Enumerable.Range(32, 95).Select(i => (char)i),
             c => Assert.InRange(c.Luminosity(), 0.0, 1.0));
 
-    // Luminosity — monotonicity: space < thin < normal < heavy < block
+    // Luminosity - monotonicity: space < thin < normal < heavy < block
 
     [Fact]
     public void Luminosity_Ordering() =>

@@ -1,6 +1,6 @@
 namespace AboExtensions.Helpers;
 
-// TODO: Result<T> — tipo per rappresentare il risultato di un'operazione che può fallire,
+// TODO: Result<T> - tipo per rappresentare il risultato di un'operazione che può fallire,
 //   senza usare eccezioni per il flusso di controllo normale.
 //
 //   Struttura:

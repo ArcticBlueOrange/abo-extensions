@@ -19,5 +19,5 @@ public static class GuidExtensions
     //   Utile per URL, token, identificatori compatti.
     //   Esempi: Guid.Parse("d9428888-122b-11e1-b85c-61cd3cbb3210").ToShortString()
     //               → es. "iIhC2SsSEeG4XGHNPLsyEA"  (22 chars, varia per Guid)
-    //   Nota: deve essere reversibile — considerare un FromShortString(string s) : Guid.
+    //   Nota: deve essere reversibile - considerare un FromShortString(string s) : Guid.
 }

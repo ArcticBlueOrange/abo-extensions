@@ -5,7 +5,6 @@ namespace AboExtensions.Chars;
 
 public static class CharExtensions
 {
-    // TODO AGG. TEST
     private static readonly List<char> Vowels =
     [
         'a', 'e','i','o','u',

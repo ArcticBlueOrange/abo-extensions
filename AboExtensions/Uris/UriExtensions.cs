@@ -34,7 +34,7 @@ public static class UriExtensions
 
     // TODO: AddQueryParam(this Uri uri, string key, string value) : Uri
     //   Descrizione: aggiunge (o sostituisce) un parametro querystring all'URI.
-    //   Parametri: key — nome del parametro; value — valore (verrà URL-encoded).
+    //   Parametri: key - nome del parametro; value - valore (verrà URL-encoded).
     //   Esempi: new Uri("https://example.com/search").AddQueryParam("q", "hello world")
     //               → "https://example.com/search?q=hello+world"
     //           new Uri("https://example.com?page=1").AddQueryParam("size", "20")

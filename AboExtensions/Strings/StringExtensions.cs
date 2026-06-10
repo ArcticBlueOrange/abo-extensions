@@ -217,7 +217,7 @@ public static class StringExtensions
 
     // TODO: CountOccurrences(this string s, string substring) : int
     //   Descrizione: conta quante volte substring appare in s (non sovrapposto).
-    //   Parametri: substring — la sottostringa da cercare.
+    //   Parametri: substring - la sottostringa da cercare.
     //   Esempi: "abcabc".CountOccurrences("bc") → 2
     //           "aaaa".CountOccurrences("aa")   → 2  (non sovrapposto)
     //           "hello".CountOccurrences("x")   → 0
@@ -225,7 +225,7 @@ public static class StringExtensions
     // TODO: PadBoth(this string s, int width, char c = ' ') : string
     //   Descrizione: centra la stringa aggiungendo padding simmetrico. Se il padding
     //   totale è dispari, il carattere extra va a destra.
-    //   Parametri: width — larghezza totale desiderata; c — carattere di padding (default ' ').
+    //   Parametri: width - larghezza totale desiderata; c - carattere di padding (default ' ').
     //   Esempi: "hi".PadBoth(6)      → "  hi  "
     //           "hi".PadBoth(5)      → "  hi " (extra a destra)
     //           "hi".PadBoth(6, '-') → "--hi--"
@@ -233,19 +233,19 @@ public static class StringExtensions
 
     // TODO: ContainsAny(this string s, params string[] values) : bool
     //   Descrizione: true se la stringa contiene almeno uno dei valori passati.
-    //   Parametri: values — uno o più valori da cercare.
+    //   Parametri: values - uno o più valori da cercare.
     //   Esempi: "hello world".ContainsAny("world", "foo") → true
     //           "hello".ContainsAny("foo", "bar") → false
 
     // TODO: ToLines(this string s, bool removeEmpty = false) : IEnumerable<string>
     //   Descrizione: split per newline (\n, \r\n). Se removeEmpty = true scarta le righe vuote.
-    //   Parametri: removeEmpty — se true ignora le righe vuote (default false).
+    //   Parametri: removeEmpty - se true ignora le righe vuote (default false).
     //   Esempi: "a\nb\nc".ToLines() → ["a", "b", "c"]
     //           "a\n\nb".ToLines(removeEmpty: true) → ["a", "b"]
 
     // TODO: RemoveAll(this string s, char c) : string
     //   Descrizione: rimuove tutte le occorrenze del carattere c dalla stringa.
-    //   Parametri: c — il carattere da rimuovere.
+    //   Parametri: c - il carattere da rimuovere.
     //   Esempi: "hello world".RemoveAll('l') → "heo word"
     //           "aaa".RemoveAll('a') → ""
 
@@ -253,8 +253,8 @@ public static class StringExtensions
     //   Descrizione: aggiunge prefix all'inizio e suffix alla fine della stringa.
     //   Se skipIfPresent = true (default), non aggiunge prefix se la stringa inizia già
     //   con esso, e non aggiunge suffix se la stringa finisce già con esso (check indipendenti).
-    //   Parametri: prefix — stringa da preporre; suffix — stringa da appendere;
-    //              skipIfPresent — evita doppio wrap (default true).
+    //   Parametri: prefix - stringa da preporre; suffix - stringa da appendere;
+    //              skipIfPresent - evita doppio wrap (default true).
     //   Esempi: "world".Wrap("[", "]")        → "[world]"
     //           "[world".Wrap("[", "]")        → "[world]"   (prefix già presente)
     //           "world]".Wrap("[", "]")        → "[world]"   (suffix già presente)
@@ -270,9 +270,9 @@ public static class StringExtensions
     //   con i caratteri di apertura/chiusura prima di aggiungerli.
     //   Mappa di chiusura: '[' → ']', '(' → ')', '{' → '}', '<' → '>'
     //   Simmetrici (stessa chiusura): '"', '\'', '`', '*', '_', '|', '~'
-    //   Parametri: startEnd — stringa di apertura (anche multi-char, es. "<!--");
-    //              skipIfPresent — evita doppio wrap (default true);
-    //              customMappings — override/estensione per-call della mappa built-in.
+    //   Parametri: startEnd - stringa di apertura (anche multi-char, es. "<!--");
+    //              skipIfPresent - evita doppio wrap (default true);
+    //              customMappings - override/estensione per-call della mappa built-in.
     //   Esempi: "ciao".SmartWrap("[")    → "[ciao]"
     //           "'ciao".SmartWrap("'")   → "'ciao'"   (inizia già con ', non raddoppia)
     //           "ciao'".SmartWrap("'")   → "'ciao'"   (finisce già con ', non raddoppia)
@@ -284,7 +284,7 @@ public static class StringExtensions
     //               → "/*code*/"
     //   Nota: per stringhe multi-char senza caso speciale, usare Wrap() esplicito.
     //
-    //   ESTENSIBILITÀ — dizionario globale + override per-call (ibrido):
+    //   ESTENSIBILITÀ - dizionario globale + override per-call (ibrido):
     //     - Esporre un dizionario statico pubblico su SmartWrapExtensions (o StringExtensions):
     //         public static Dictionary<string, string> CustomMappings = new();
     //       Il consumer lo popola una volta all'avvio dell'app:
@@ -298,6 +298,6 @@ public static class StringExtensions
     //         1. customMappings (per-call)
     //         2. CustomMappings (globale statico)
     //         3. mappa built-in (char singoli)
-    //     - ATTENZIONE: CustomMappings è stato globale mutabile — documentare che
+    //     - ATTENZIONE: CustomMappings è stato globale mutabile - documentare che
     //       le scritture non sono thread-safe; popolare solo durante l'inizializzazione.
 }

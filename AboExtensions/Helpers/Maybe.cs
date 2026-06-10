@@ -1,6 +1,6 @@
 namespace AboExtensions.Helpers;
 
-// TODO: Maybe<T> — tipo per rendere esplicita la presenza o assenza di un valore,
+// TODO: Maybe<T> - tipo per rendere esplicita la presenza o assenza di un valore,
 //   alternativa più espressiva a T? per i reference type.
 //
 //   Struttura:
@@ -41,5 +41,5 @@ namespace AboExtensions.Helpers;
 //     ((string?)null).ToMaybe().Map(s => s.Length).HasValue       → false
 //     user.ToMaybe().IfSome(u => Console.WriteLine(u.Name))
 //
-//   Nota: per value type usare direttamente T? — Maybe<T> aggiunge valore
+//   Nota: per value type usare direttamente T? - Maybe<T> aggiunge valore
 //   principalmente per i reference type dove T? non porta semantica esplicita.
