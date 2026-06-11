@@ -29,6 +29,7 @@ dotnet add package AboExtensions
 | `Reflections` | `GetPropertyByName`, `GetPropertiesToString` |
 | `StringBuilders` | `AppendIf`, `AppendLineIf`, `Prepend` |
 | `Strings` | `IsNullOrWhiteSpace`, `IsNotNullOrWhiteSpace`, `IsNullOrEmpty`, `IsNotNullOrEmpty`, `OrElse`, `Capitalize`, `ToSlug`, `ToPascalCase`, `ToCamelCase`, `Repeat`, `Left`, `Right`, `Ellipsify`, `NumOnly`, `CharOnly`, `IsNumeric`, `IsEmail`, `TrimStartEnd`, `StringJoin`, `RemoveFirstChar` |
+| `Hashing` | `ToSha256`, `ToSha512`, `ToMd5`, `ToHex`, `FromHex`, `ToBase64` |
 | `TimeSpans` | `IsZero`, `Ago`, `FromNow` |
 
 ---
@@ -862,6 +863,54 @@ TimeSpan.FromSeconds(1).IsZero()    // → false
 ```csharp
 TimeSpan.FromHours(2).Ago()       // → DateTime.Now - 2 hours
 TimeSpan.FromDays(1).FromNow()    // → DateTime.Now + 1 day
+```
+
+---
+
+## Hashing (`AboExtensions.Hashing`)
+
+```csharp
+using AboExtensions.Hashing;
+```
+
+**`ToSha256`** - SHA-256 hash as a lowercase hex string. Use for checksums, cache keys, deduplication. Do not use for passwords:
+
+```csharp
+"hello".ToSha256()    // → "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+"".ToSha256()         // → "e3b0c44298fc1c149afbf4c8996fb924..."
+
+// byte[] overload:
+new byte[] { 1, 2, 3 }.ToSha256()   // → "039058c6f2c0cb492c533b0a4d14ef77..."
+```
+
+**`ToSha512`** - SHA-512 hash as a lowercase hex string (128 characters):
+
+```csharp
+"hello".ToSha512()   // → "9b71d224bd62f3785d96d46ad3ea3d73..."
+```
+
+**`ToMd5`** - MD5 hash as a lowercase hex string. Use for Gravatar, ETag, checksums. Do not use for passwords:
+
+```csharp
+"hello".ToMd5()    // → "5d41402abc4b2a76b9719d911017c592"
+"".ToMd5()         // → "d41d8cd98f00b204e9800998ecf8427e"
+```
+
+**`ToHex`** / **`FromHex`** - converts between `byte[]` and a lowercase hex string:
+
+```csharp
+new byte[] { 0, 255, 16 }.ToHex()    // → "00ff10"
+"00ff10".FromHex()                    // → new byte[] { 0, 255, 16 }
+
+// round-trip:
+bytes.ToHex().FromHex() == bytes      // → true
+```
+
+**`ToBase64`** - encodes to Base64, available on both `string` and `byte[]`:
+
+```csharp
+"hello".ToBase64()                    // → "aGVsbG8="
+new byte[] { 1, 2, 3 }.ToBase64()    // → "AQID"
 ```
 
 ---
