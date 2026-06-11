@@ -1,3 +1,7 @@
+using AboExtensions.Chars;
+using AboExtensions.Objects;
+using System.Text;
+
 namespace AboExtensions.Exceptions;
 
 public static class ExceptionExtensions
@@ -19,29 +23,29 @@ public static class ExceptionExtensions
             yield return v;
         }
     }
-    // TODO: ToLogString(this Exception ex, bool includeStackTrace = true) : string
-    //   Descrizione: formatta l'eccezione e tutta la sua catena in una stringa
-    //   leggibile per il logging. Include tipo, messaggio e opzionalmente lo stack trace.
-    //   Parametri: includeStackTrace - se true include lo stack trace (default true).
-    //   Esempi: ex.ToLogString()
-    //               → "[ArgumentNullException] Value cannot be null.\n  at ...\n"
-    //                  "---> [InvalidOperationException] Inner message.\n  at ..."
-    //           ex.ToLogString(includeStackTrace: false)
-    //               → "[ArgumentNullException] Value cannot be null.\n"
-    //                  "---> [InvalidOperationException] Inner message."
+    public static string ToLogString(this Exception e)
+    {
+        StringBuilder sb = new();
+        var spaces = 0;
+        sb.Append('[')
+            .Append(e.GetType().Name)
+            .Append(']')
+            .Append(e.Message)
+            .Append(e.ToString())
+            ;
+        foreach (var f in e.Flatten().ToList()[1..])
+            sb
+              .Append('\n')
+              .Append(' '.Repeat(spaces * 4))
+              .Append("--->")
+              .Append('[')
+              .Append(f.GetType().Name)
+              .Append(']')
+              .Append(f.Message)
+              .Also(_ => { spaces++; return true; });
 
-    // TODO: IsOfType<T>(this Exception ex) : bool  where T : Exception
-    //   Descrizione: true se l'eccezione è del tipo T (usa is, quindi vale anche per
-    //   sottotipi). Shorthand leggibile per ex is T.
-    //   Esempi: new ArgumentNullException("x").IsOfType<ArgumentException>() → true
-    //           new InvalidOperationException().IsOfType<ArgumentException>() → false
+        return sb.ToString();
+    }
 
-    // TODO: InnerIfNotNull(this Exception ex, Action<Exception> action) : Exception
-    //   Descrizione: esegue action sull'InnerException se non è null, poi restituisce
-    //   ex per il chaining. Utile per loggare o ispezionare l'inner senza if espliciti.
-    //   Analogo a IfNotNull ma specifico per la catena di eccezioni.
-    //   Esempi: ex.InnerIfNotNull(inner => logger.Log(inner.Message))
-    //               .ToLogString();   // chaining
-    //           new Exception("no inner").InnerIfNotNull(_ => Console.WriteLine("x"))
-    //               // non stampa nulla
+    public static bool IsOfType<T>(this Exception exception) where T : Exception => exception is T;
 }

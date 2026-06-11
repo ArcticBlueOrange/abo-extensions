@@ -77,4 +77,90 @@ public class TestExceptionExtensions
         var outer = new Exception("outer", new Exception("mid", root));
         Assert.Same(root, outer.Flatten().Last());
     }
+
+    // IsOfType
+
+    [Fact]
+    public void IsOfType_ExactType_ReturnsTrue()
+    {
+        var ex = new ArgumentNullException();
+        Assert.True(ex.IsOfType<ArgumentNullException>());
+    }
+
+    [Fact]
+    public void IsOfType_BaseType_ReturnsTrue()
+    {
+        var ex = new ArgumentNullException();
+        Assert.True(ex.IsOfType<ArgumentException>());
+    }
+
+    [Fact]
+    public void IsOfType_DifferentType_ReturnsFalse()
+    {
+        var ex = new ArgumentException();
+        Assert.False(ex.IsOfType<InvalidOperationException>());
+    }
+
+    [Fact]
+    public void IsOfType_BaseNotAssignableFromDerived_ReturnsFalse()
+    {
+        var ex = new ArgumentException();
+        Assert.False(ex.IsOfType<ArgumentNullException>());
+    }
+
+    // ToLogString
+
+    [Fact]
+    public void ToLogString_ContainsTypeName()
+    {
+        var ex = new ArgumentNullException("param");
+        var s = ex.ToLogString();
+        Assert.Contains("[ArgumentNullException]", s);
+    }
+
+    [Fact]
+    public void ToLogString_ContainsMessage()
+    {
+        var ex = new Exception("oops");
+        var s = ex.ToLogString();
+        Assert.Contains("oops", s);
+    }
+
+    [Fact]
+    public void ToLogString_WithInner_ContainsBothTypeNames()
+    {
+        var inner = new InvalidOperationException("inner msg");
+        var outer = new Exception("outer msg", inner);
+        var s = outer.ToLogString();
+        Assert.Contains("[Exception]", s);
+        Assert.Contains("[InvalidOperationException]", s);
+    }
+
+    [Fact]
+    public void ToLogString_WithInner_ContainsBothMessages()
+    {
+        var inner = new InvalidOperationException("inner msg");
+        var outer = new Exception("outer msg", inner);
+        var s = outer.ToLogString();
+        Assert.Contains("outer msg", s);
+        Assert.Contains("inner msg", s);
+    }
+
+    [Fact]
+    public void ToLogString_WithInner_InnerMarkedWithArrow()
+    {
+        var inner = new Exception("inner");
+        var outer = new Exception("outer", inner);
+        var s = outer.ToLogString();
+        Assert.Contains("--->", s);
+    }
+
+    [Fact]
+    public void ToLogString_OuterAppearsBeforeInner()
+    {
+        var inner = new Exception("inner");
+        var outer = new Exception("outer", inner);
+        var s = outer.ToLogString();
+        Assert.True(s.IndexOf("outer") < s.IndexOf("inner"));
+    }
 }
