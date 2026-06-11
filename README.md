@@ -14,11 +14,11 @@ dotnet add package AboExtensions
 |-----------|---------|
 | `Booleans` | `Toggle` |
 | `Chars` | `IsUnicodeLetter`, `IsVowel`, `IsConsonant`, `IsAscii`, `Repeat`, `Rot13`, `Luminosity` |
-| `ComplexNumbers` | `ToMathString` |
+| `ComplexNumbers` | `ToMathString`, `IsReal`, `IsImaginary`, `ToVector2` |
 | `Dates` | `IsWeekend`, `IsWeekday`, `StartOfDay`, `EndOfDay`, `StartOfWeek`, `Age`, `IsInThePast`, `IsInTheFuture`, `Quarter`, `AddWorkdays`, `NextWeekday`, `ToUnixTimestamp`, `ToUnixTimestampMs`, `FromUnixTimestamp`, `FromoUnixTimestampMs` |
 | `Dictionaries` | `AddOrUpdate`, `Invert` |
 | `Enums` | `GetValues` |
-| `Exceptions` | `GetRootCause`, `Flatten` |
+| `Exceptions` | `GetRootCause`, `Flatten`, `ToLogString`, `IsOfType` |
 | `Guids` | `IsEmpty`, `IsNotEmpty`, `OrNew` |
 | `IpAddresses` | `IsValidIp`, `IsValidIpV4`, `IsValidIpV6`, `ToIpAddress` |
 | `Lists` | `ForEach`, `None`, `IsNullOrEmpty`, `Batch`, `Shuffle`, `WhereNotNull`, `Flatten`, `Frequencies` |
@@ -492,6 +492,28 @@ new Complex(0, -1).ToMathString()   // → "-i"
 new Complex(1, 1).ToMathString()    // → "1+i"
 ```
 
+**`IsReal`** - true if the imaginary part is zero:
+
+```csharp
+new Complex(3, 0).IsReal()    // → true
+new Complex(3, 1).IsReal()    // → false
+```
+
+**`IsImaginary`** - true if the real part is zero and the imaginary part is non-zero:
+
+```csharp
+new Complex(0, 2).IsImaginary()    // → true
+new Complex(0, 0).IsImaginary()    // → false
+new Complex(1, 2).IsImaginary()    // → false
+```
+
+**`ToVector2`** - converts to `System.Numerics.Vector2` (Real → X, Imaginary → Y):
+
+```csharp
+new Complex(3, 4).ToVector2()    // → new Vector2(3f, 4f)
+new Complex(0, 1).ToVector2()    // → new Vector2(0f, 1f)
+```
+
 ---
 
 ## Dictionaries (`AboExtensions.Dictionaries`)
@@ -561,6 +583,25 @@ new Exception("no inner").GetRootCause().Message    // → "no inner"
 new Exception("a", new Exception("b", new Exception("c")))
     .Flatten()
     .Select(e => e.Message)    // → ["a", "b", "c"]
+```
+
+**`ToLogString`** - formats the full exception chain into a readable string for logging, with type name in brackets and inner exceptions prefixed by `--->`:
+
+```csharp
+var inner = new InvalidOperationException("connection lost");
+var outer = new Exception("request failed", inner);
+
+outer.ToLogString()
+// → "[Exception]request failed...
+//    ---> [InvalidOperationException]connection lost"
+```
+
+**`IsOfType<T>`** - checks whether the exception is of a given type, including derived types:
+
+```csharp
+new ArgumentNullException().IsOfType<ArgumentNullException>()  // → true
+new ArgumentNullException().IsOfType<ArgumentException>()      // → true  (base type)
+new ArgumentException().IsOfType<ArgumentNullException>()      // → false
 ```
 
 ---
