@@ -8,7 +8,7 @@ public static class ReflectionExtensions
     {
         return o.GetType().GetProperty(property).GetValue(o, null);
     }
-    public static string GetPropertiesToString(object o, string propNames, char inSep = ',', char outSep = ' ')
+    public static string GetPropertiesToString(this object o, string propNames, char inSep = ',', char outSep = ' ')
     {
         if (!propNames.Contains(inSep))
             return GetPropertyByName(o, propNames).ToString();

@@ -32,34 +32,34 @@ public class TestReflections
     public void GetPropertiesToString_SingleProperty_ReturnsValue()
     {
         var p = new Person("Mario", "Rossi", 30);
-        Assert.Equal("Mario", ReflectionExtensions.GetPropertiesToString(p, "FirstName"));
+        Assert.Equal("Mario", p.GetPropertiesToString("FirstName"));
     }
 
     [Fact]
     public void GetPropertiesToString_MultipleProperties_JoinsWithDefaultSeparator()
     {
         var p = new Person("Mario", "Rossi", 30);
-        Assert.Equal("Mario Rossi", ReflectionExtensions.GetPropertiesToString(p, "FirstName,LastName"));
+        Assert.Equal("Mario Rossi", p.GetPropertiesToString("FirstName,LastName"));
     }
 
     [Fact]
     public void GetPropertiesToString_MultipleProperties_CustomOutSeparator()
     {
         var p = new Person("Mario", "Rossi", 30);
-        Assert.Equal("Mario-Rossi", ReflectionExtensions.GetPropertiesToString(p, "FirstName,LastName", outSep: '-'));
+        Assert.Equal("Mario-Rossi", p.GetPropertiesToString("FirstName,LastName", outSep: '-'));
     }
 
     [Fact]
     public void GetPropertiesToString_MultipleProperties_CustomInSeparator()
     {
         var p = new Person("Mario", "Rossi", 30);
-        Assert.Equal("Mario Rossi", ReflectionExtensions.GetPropertiesToString(p, "FirstName;LastName", inSep: ';'));
+        Assert.Equal("Mario Rossi", p.GetPropertiesToString("FirstName;LastName", inSep: ';'));
     }
 
     [Fact]
     public void GetPropertiesToString_PropNamesWithWhitespaceEntries_IgnoresBlanks()
     {
         var p = new Person("Mario", "Rossi", 30);
-        Assert.Equal("Mario Rossi", ReflectionExtensions.GetPropertiesToString(p, "FirstName, ,LastName"));
+        Assert.Equal("Mario Rossi", p.GetPropertiesToString("FirstName, ,LastName"));
     }
 }
