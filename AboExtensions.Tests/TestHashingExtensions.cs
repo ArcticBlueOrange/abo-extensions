@@ -120,4 +120,81 @@ public class TestHashingExtensions
     {
         Assert.Equal("039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81", new byte[] { 1, 2, 3 }.ToSha256());
     }
+
+    // ToHex
+
+    [Fact]
+    public void ToHex_KnownBytes_ReturnsExpected()
+    {
+        Assert.Equal("00ff10", new byte[] { 0, 255, 16 }.ToHex());
+    }
+
+    [Fact]
+    public void ToHex_EmptyArray_ReturnsEmptyString()
+    {
+        Assert.Equal("", Array.Empty<byte>().ToHex());
+    }
+
+    [Fact]
+    public void ToHex_OutputIsLowercase()
+    {
+        var result = new byte[] { 0xAB, 0xCD }.ToHex();
+        Assert.Equal("abcd", result);
+    }
+
+    // FromHex
+
+    [Fact]
+    public void FromHex_KnownString_ReturnsExpected()
+    {
+        Assert.Equal(new byte[] { 0, 255, 16 }, "00ff10".FromHex());
+    }
+
+    [Fact]
+    public void FromHex_UppercaseInput_Works()
+    {
+        Assert.Equal(new byte[] { 0xAB, 0xCD }, "ABCD".FromHex());
+    }
+
+    [Fact]
+    public void FromHex_EmptyString_ReturnsEmptyArray()
+    {
+        Assert.Empty("".FromHex());
+    }
+
+    [Fact]
+    public void FromHex_RoundTrip_WithToHex()
+    {
+        var original = new byte[] { 1, 42, 255, 0 };
+        Assert.Equal(original, original.ToHex().FromHex());
+    }
+
+    // ToBase64(string)
+
+    [Fact]
+    public void ToBase64_String_KnownValue()
+    {
+        Assert.Equal("aGVsbG8=", "hello".ToBase64());
+    }
+
+    [Fact]
+    public void ToBase64_EmptyString_ReturnsEmptyBase64()
+    {
+        Assert.Equal("", "".ToBase64());
+    }
+
+    // ToBase64(byte[])
+
+    [Fact]
+    public void ToBase64_Bytes_KnownValue()
+    {
+        Assert.Equal("AQID", new byte[] { 1, 2, 3 }.ToBase64());
+    }
+
+    [Fact]
+    public void ToBase64_Bytes_MatchesStringOverload()
+    {
+        var bytes = Encoding.UTF8.GetBytes("hello");
+        Assert.Equal("hello".ToBase64(), bytes.ToBase64());
+    }
 }
