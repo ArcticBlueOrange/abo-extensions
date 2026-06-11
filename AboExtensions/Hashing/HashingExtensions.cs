@@ -12,7 +12,7 @@ public static class HashingExtensions
     public static string ToMd5(this string text) => Hash(text, MD5.HashData);
 
     private static string Hash(string text, Func<byte[], byte[]> hashFn)
-        => hashFn(text.FromHex()).ToHex().ToLowerInvariant();
+        => hashFn(Encoding.UTF8.GetBytes(text)).ToHex();
 
     public static string ToSha256(this byte[] bytes) => Hash(bytes, SHA256.HashData);
 
@@ -21,14 +21,14 @@ public static class HashingExtensions
     public static string ToMd5(this byte[] bytes) => Hash(bytes, MD5.HashData);
 
     private static string Hash(byte[] bytes, Func<byte[], byte[]> hashFn)
-        => hashFn(bytes).ToHex().ToLowerInvariant();
+        => hashFn(bytes).ToHex();
 
     /// <summary>
     /// Converte un array di byte in stringa esadecimale lowercase.
     /// </summary>
     /// <param name="b"></param>
     /// <returns></returns>
-    public static string ToHex(this byte[] b) => Convert.ToHexString(b);
+    public static string ToHex(this byte[] b) => Convert.ToHexString(b).ToLowerInvariant();
     /// <summary>
     //  Converte una stringa esadecimale in array di byte.
     /// </summary>
