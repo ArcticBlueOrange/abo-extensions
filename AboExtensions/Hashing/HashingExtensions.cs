@@ -49,9 +49,5 @@ public static class HashingExtensions
     /// <param name="s"></param>
     /// <returns></returns>
     public static string ToBase64(this byte[] b) => Convert.ToBase64String(b);
-
-    // TODO: FromBase64(this string s) : string
-    //   Descrizione: decodifica una stringa Base64 in testo (UTF-8).
-    //   Lancia FormatException se la stringa non è Base64 valida.
-    //   Esempi: "aGVsbG8=".FromBase64() → "hello"
+    public static string FromBase64(this string s) => Encoding.UTF8.GetString(Convert.FromBase64String(s));
 }

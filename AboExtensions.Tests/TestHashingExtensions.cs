@@ -197,4 +197,38 @@ public class TestHashingExtensions
         var bytes = Encoding.UTF8.GetBytes("hello");
         Assert.Equal("hello".ToBase64(), bytes.ToBase64());
     }
+
+    // FromBase64(string)
+
+    [Fact]
+    public void FromBase64_KnownValue_ReturnsExpected()
+    {
+        Assert.Equal("hello", "aGVsbG8=".FromBase64());
+    }
+
+    [Fact]
+    public void FromBase64_EmptyBase64_ReturnsEmptyString()
+    {
+        Assert.Equal("", "".FromBase64());
+    }
+
+    [Fact]
+    public void FromBase64_RoundTrip_WithToBase64()
+    {
+        var original = "Hello, World!";
+        Assert.Equal(original, original.ToBase64().FromBase64());
+    }
+
+    [Fact]
+    public void FromBase64_UnicodeString_RoundTrip()
+    {
+        var original = "ciao è à ù";
+        Assert.Equal(original, original.ToBase64().FromBase64());
+    }
+
+    [Fact]
+    public void FromBase64_InvalidInput_Throws()
+    {
+        Assert.Throws<FormatException>(() => "not-valid-base64!!!".FromBase64());
+    }
 }

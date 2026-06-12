@@ -38,19 +38,39 @@ public static class ComplexExtensions
     //   Esempi: new Complex(0, 1).ToPolar() → (1.0, π/2)
     //           new Complex(1, 0).ToPolar() → (1.0, 0.0)
 
-    // TODO: Rotate(this Complex c, double angle) : Complex
-    //   Descrizione: ruota il numero complesso di angle radianti (moltiplica per e^(i*angle)).
-    //   Usato in grafica 2D e signal processing.
-    //   Esempi: new Complex(1, 0).Rotate(Math.PI / 2) → ~(0, 1)
+    /// <summary>
+    ///   Ruota il numero complesso di angle radianti (moltiplica per e^(i*angle)).
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public static Complex Rotate(this Complex c, double angle)
+    {
+        Complex rot = new(Math.Cos(angle), Math.Sin(angle));
+        return c * rot;
+    }
 
     public static bool IsReal(this Complex c) => c.Imaginary == 0;
 
     public static bool IsImaginary(this Complex c) => c.Imaginary != 0 && c.Real == 0;
 
-    // TODO: NthRootsOfUnity(int n) : IEnumerable<Complex>
-    //   Descrizione: restituisce le n radici n-esime dell'unità (e^(2πik/n) per k=0..n-1).
-    //   Usato in FFT e trasformazioni di Fourier discreta.
-    //   Esempi: NthRootsOfUnity(4) → { 1, i, -1, -i }
+    /// <summary>
+    ///   Restituisce le n radici n-esime dell'unità (e^(2πik/n) per k=0..n-1).
+    ///   Usato in FFT e trasformazioni di Fourier discreta.
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="n"></param>
+    /// <returns></returns>
+    public static IEnumerable<Complex> NthRoots(this Complex c, int n)
+    {
+        var r = Math.Pow(c.Magnitude, 1.0 / n);
+        var baseAngle = c.Phase / n;
+        var angleStep = 2 * Math.PI / n;
+        var rComplex = new Complex(r, 0);
+        for (int i = 0; i < n; i++)
+            yield return rComplex.Rotate(baseAngle + i * angleStep);
+    }
+    public static IEnumerable<Complex> NthRootsOfUnity(int n) => Complex.One.NthRoots(n); 
 
     public static Vector2 ToVector2(this Complex c) => new Vector2((float)c.Real, (float)c.Imaginary);
 }
