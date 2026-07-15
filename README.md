@@ -922,3 +922,4 @@ new byte[] { 1, 2, 3 }.ToBase64()    // → "AQID"
 ## License
 
 MIT
+
