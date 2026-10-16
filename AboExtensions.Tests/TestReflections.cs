@@ -24,7 +24,7 @@ public class TestReflections
 
     [Fact]
     public void GetPropertyByName_NonExistingProperty_Throws() =>
-        Assert.Throws<NullReferenceException>(() => new Person("Mario", "Rossi", 30).GetPropertyByName("Missing"));
+        Assert.Throws<ArgumentException>(() => new Person("Mario", "Rossi", 30).GetPropertyByName("Missing"));
 
     // GetPropertiesToString
 

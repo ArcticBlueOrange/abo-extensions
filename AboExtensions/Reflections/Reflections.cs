@@ -6,7 +6,9 @@ public static class ReflectionExtensions
 {
     public static object GetPropertyByName(this object o, string property)
     {
-        return o.GetType().GetProperty(property).GetValue(o, null);
+        var prop = o.GetType().GetProperty(property)
+            ?? throw new ArgumentException($"Property '{property}' not found on type {o.GetType().Name}", nameof(property));
+        return prop.GetValue(o, null);
     }
     public static string GetPropertiesToString(this object o, string propNames, char inSep = ',', char outSep = ' ')
     {
@@ -15,6 +17,7 @@ public static class ReflectionExtensions
 
         var props = propNames.Split(inSep)
             .Where(s => !s.IsNullOrWhiteSpace())
+            .Select(s => s.Trim())
             .Select(s => GetPropertyByName(o, s))
             .ToList();
 
