@@ -13,7 +13,7 @@ public static class ReflectionExtensions
     public static string GetPropertiesToString(this object o, string propNames, char inSep = ',', char outSep = ' ')
     {
         if (!propNames.Contains(inSep))
-            return GetPropertyByName(o, propNames).ToString();
+            return GetPropertyByName(o, propNames.Trim())?.ToString() ?? "";
 
         var props = propNames.Split(inSep)
             .Where(s => !s.IsNullOrWhiteSpace())
