@@ -54,7 +54,7 @@ public static class DateExtensions
     /// </summary>
     /// <param name="d"></param>
     /// <returns></returns>
-    public static TimeSpan Elapsed(this DateTime d) => DateTime.Now - d.Date;
+    public static TimeSpan Elapsed(this DateTime d) => DateTime.Now - d;
 
     public static long ToUnixTimestamp(this DateTime d, bool throwOnUnspecified = false)
     {

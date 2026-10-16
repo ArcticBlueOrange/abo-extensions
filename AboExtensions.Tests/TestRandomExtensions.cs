@@ -147,4 +147,15 @@ public class TestRandomExtensions
         var result = new Random(42).NextString(1000);
         Assert.All(result, c => Assert.True(char.IsLetterOrDigit(c) || c == '-' || c == '_'));
     }
+
+    // Bug repro: NextBool(0) can return true when NextDouble() == 0.0
+
+    private class ZeroRandom : Random
+    {
+        public override double NextDouble() => 0.0;
+    }
+
+    [Fact]
+    public void NextBool_ProbabilityZero_NeverTrue() =>
+        Assert.False(new ZeroRandom().NextBool(0));
 }

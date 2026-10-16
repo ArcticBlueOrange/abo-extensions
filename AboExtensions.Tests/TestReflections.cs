@@ -62,4 +62,21 @@ public class TestReflections
         var p = new Person("Mario", "Rossi", 30);
         Assert.Equal("Mario Rossi", p.GetPropertiesToString("FirstName, ,LastName"));
     }
+
+    // Bug repro: property names with spaces / missing properties
+
+    [Fact]
+    public void GetPropertiesToString_SpacesAfterSeparator_AreTrimmed()
+    {
+        var p = new Person("Mario", "Rossi", 40);
+        Assert.Equal("Mario Rossi", p.GetPropertiesToString("FirstName, LastName"));
+    }
+
+    [Fact]
+    public void GetPropertyByName_MissingProperty_DoesNotThrowNullReference()
+    {
+        var p = new Person("Mario", "Rossi", 40);
+        var ex = Record.Exception(() => p.GetPropertyByName("Nope"));
+        Assert.IsNotType<NullReferenceException>(ex);
+    }
 }

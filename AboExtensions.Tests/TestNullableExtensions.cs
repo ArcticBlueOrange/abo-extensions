@@ -81,4 +81,14 @@ public class TestNullableExtensions
         var result = value.MapNotNull(int.Parse).MapNotNull(n => n * 2);
         Assert.Equal(84, result);
     }
+
+    // Bug repro: MapNotNull to a value type returns default instead of null
+
+    [Fact]
+    public void MapNotNull_NullInput_ValueTypeResult_IsNull()
+    {
+        string? value = null;
+        object? result = value.MapNotNull(s => s.Length);
+        Assert.Null(result);
+    }
 }

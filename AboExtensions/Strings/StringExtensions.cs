@@ -201,26 +201,35 @@ public static class StringExtensions
     //           "".Reverse()      → ""
     //           "a".Reverse()     → "a"
 
-    public static int CountOccurrences(this string s, string substr)
+    /// <summary>
+    /// Counts how many times a string appears in another
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="substr"></param>
+    /// <param name="ignoreCase"></param>
+    /// <returns></returns>
+    public static int CountOccurrences(this string s, string substr, bool ignoreCase = false)
     {
-        int c = 0;
-        while (s.Contains(substr))
+        ArgumentException.ThrowIfNullOrEmpty(substr);
+        var c = 0;
+        var l1 = s.Length;
+        var l2 = substr.Length;
+        var d = l1 - l2;
+        var comp = ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
+        for (var i = 0; i <= d; i++)
         {
-            c++;
-            s = s.Replace(substr, "");
+            var subs = s.Substring(i, l2);
+            if (subs.StartsWith(substr, comparisonType: comp))
+            {
+                c++;
+                i += l2 - 1;
+                continue;
+            }
         }
         return c;
     }
 
     public static string Rot13(this string s) => new([.. s.Select(c => c.Rot13())]);
-
-
-    // TODO: CountOccurrences(this string s, string substring) : int
-    //   Descrizione: conta quante volte substring appare in s (non sovrapposto).
-    //   Parametri: substring - la sottostringa da cercare.
-    //   Esempi: "abcabc".CountOccurrences("bc") → 2
-    //           "aaaa".CountOccurrences("aa")   → 2  (non sovrapposto)
-    //           "hello".CountOccurrences("x")   → 0
 
     // TODO: PadBoth(this string s, int width, char c = ' ') : string
     //   Descrizione: centra la stringa aggiungendo padding simmetrico. Se il padding

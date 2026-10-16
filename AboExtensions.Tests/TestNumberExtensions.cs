@@ -258,4 +258,35 @@ public class TestNumberExtensions
     [InlineData(0xa, 16, 1)]
     public void TestDigitsCustomBase(int input, int @base, int expected) =>
         Assert.Equal(expected, input.Digits(@base));
+
+    // Bug repro: RomanDecode accepts leftover / malformed numerals
+
+    [Theory]
+    [InlineData("IM")]
+    [InlineData("VX")]
+    [InlineData("IIV")]
+    [InlineData("XCX")]
+    [InlineData("IVI")]
+    [InlineData("CMCD")]
+    public void RomanDecode_MalformedNumeral_Throws(string input) =>
+        Assert.Throws<FormatException>(() => input.RomanDecode());
+
+    // Bug repro: RomanEncode passes the message as paramName
+
+    [Fact]
+    public void RomanEncode_OutOfRange_ParamNameIsI()
+    {
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => 0.RomanEncode());
+        Assert.Equal("i", ex.ParamName);
+    }
+
+    // Bug repro: Digits edge cases
+
+    [Fact]
+    public void Digits_IntMinValue_ReturnsTen() =>
+        Assert.Equal(10, int.MinValue.Digits());
+
+    [Fact]
+    public void Digits_BaseZero_ThrowsArgumentOutOfRange() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => 10.Digits(0));
 }

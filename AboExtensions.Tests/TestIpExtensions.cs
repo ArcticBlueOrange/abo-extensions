@@ -70,4 +70,20 @@ public class TestIpExtensions
     [Fact]
     public void ToIpAddress_ReturnsCorrectType() =>
         Assert.IsType<IPAddress>("10.0.0.1".ToIpAddress()!);
+
+    // Bug repro: IPv4/IPv6 detection based on '.' / ':'
+
+    [Theory]
+    [InlineData("::ffff:1.2.3.4")]
+    [InlineData("127.1")]
+    public void IsValidIpV4_NotAStandardIpV4_ReturnsFalse(string input) =>
+        Assert.False(input.IsValidIpV4());
+
+    [Fact]
+    public void IsValidIp_SingleNumber_IsNotValidIpV4NorIpV6()
+    {
+        Assert.True("1".IsValidIp());
+        Assert.True("1".IsValidIpV4() || "1".IsValidIpV6(),
+            "IsValidIp accepts \"1\" but neither IsValidIpV4 nor IsValidIpV6 does");
+    }
 }

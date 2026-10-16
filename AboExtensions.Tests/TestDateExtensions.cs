@@ -212,4 +212,39 @@ public class TestDateExtensions
         var dt = new DateTime(2024, 6, 15, 12, 30, 0, 500, DateTimeKind.Utc);
         Assert.Equal(dt, dt.ToUnixTimestampMs().FromoUnixTimestampMs());
     }
+
+    // Bug repro: ToUnixTimestampMs throwOnUnspecified is inverted
+
+    [Fact]
+    public void ToUnixTimestampMs_Utc_WithThrowOnUnspecified_DoesNotThrow()
+    {
+        var dt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        Assert.Equal(dt.ToUnixTimestamp() * 1000L, dt.ToUnixTimestampMs(throwOnUnspecified: true));
+    }
+
+    [Fact]
+    public void ToUnixTimestampMs_Unspecified_WithThrowOnUnspecified_Throws()
+    {
+        var dt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        Assert.Throws<InvalidOperationException>(() => dt.ToUnixTimestampMs(throwOnUnspecified: true));
+    }
+
+    // Bug repro: ToUnixTimestamp rounds instead of truncating
+
+    [Fact]
+    public void ToUnixTimestamp_TruncatesFractionalSeconds()
+    {
+        var dt = new DateTime(2024, 1, 1, 0, 0, 0, 700, DateTimeKind.Utc);
+        var whole = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        Assert.Equal(whole.ToUnixTimestamp(), dt.ToUnixTimestamp());
+    }
+
+    // Bug repro: Elapsed ignores the time of day
+
+    [Fact]
+    public void Elapsed_FiveMinutesAgo_IsAboutFiveMinutes()
+    {
+        var elapsed = DateTime.Now.AddMinutes(-5).Elapsed();
+        Assert.InRange(elapsed, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(6));
+    }
 }

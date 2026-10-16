@@ -163,4 +163,22 @@ public class TestExceptionExtensions
         var s = outer.ToLogString();
         Assert.True(s.IndexOf("outer") < s.IndexOf("inner"));
     }
+
+    // Bug repro: ToLogString duplicates messages (Message + ToString())
+
+    [Fact]
+    public void ToLogString_OuterMessageAppearsOnce()
+    {
+        var outer = new Exception("outer msg", new InvalidOperationException("inner msg"));
+        var s = outer.ToLogString();
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(s, "outer msg"));
+    }
+
+    [Fact]
+    public void ToLogString_InnerMessageAppearsOnce()
+    {
+        var outer = new Exception("outer msg", new InvalidOperationException("inner msg"));
+        var s = outer.ToLogString();
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(s, "inner msg"));
+    }
 }

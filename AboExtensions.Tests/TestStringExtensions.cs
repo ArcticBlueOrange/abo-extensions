@@ -196,4 +196,34 @@ public class TestStringExtensions
     [InlineData(null, false)]
     public void TestIsEmail(string? input, bool expected) =>
         Assert.Equal(expected, input.IsEmail());
+
+    // Bug repro: CountOccurrences
+
+    [Theory]
+    [InlineData("abcabc", "bc", 2)]
+    [InlineData("aabb", "ab", 1)]
+    [InlineData("aaaa", "aa", 2)]
+    [InlineData("hello", "x", 0)]
+    [InlineData("hell", "hell", 1)]
+    [InlineData("ciao mondociao", "ciao", 2)]
+    public void CountOccurrences_CountsNonOverlappingOccurrences(string input, string sub, int expected) =>
+        Assert.Equal(expected, input.CountOccurrences(sub));
+
+    [Fact]
+    public void CountOccurrences_EmptySubstring_ThrowsArgumentException() =>
+        Assert.Throws<ArgumentException>(() => "abc".CountOccurrences(""));
+
+    [Fact]
+    public void CountOccurrences_NullSubstring_ThrowsArgumentNullException() =>
+        Assert.Throws<ArgumentNullException>(() => "abc".CountOccurrences(null!));
+
+    // Bug repro: Ellipsify with max < 4
+
+    [Theory]
+    [InlineData("abc", 2, "...")]
+    [InlineData("abcd", 2, "...")]
+    [InlineData("abcd", 1, "...")]
+    [InlineData("ab", 2, "ab")]
+    public void Ellipsify_SmallMax_ReturnsDotsWhenTooLong(string input, int max, string expected) =>
+        Assert.Equal(expected, input.Ellipsify(max));
 }

@@ -12,6 +12,9 @@ public static class RandomExtensions
         if (probability < 0 || probability > 1)
             throw new ArgumentOutOfRangeException(nameof(probability));
 
+        if (probability == 0)
+            return false;
+
         var res = r.NextDouble();
         return res <= probability;
     }
