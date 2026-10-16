@@ -5,7 +5,7 @@ namespace AboExtensions.IpAddresses;
 
 public static class IpExtensions
 {
-    public static bool IsValidIp(this string s) => IPAddress.TryParse(s, out _);
+    public static bool IsValidIp(this string s) => s.IsValidIpV4() || s.IsValidIpV6();
 
     public static bool IsValidIpV4(this string s) =>
         IPAddress.TryParse(s, out var ip)

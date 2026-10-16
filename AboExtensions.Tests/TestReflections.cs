@@ -73,10 +73,23 @@ public class TestReflections
     }
 
     [Fact]
-    public void GetPropertyByName_MissingProperty_DoesNotThrowNullReference()
+    public void GetPropertyByName_MissingProperty_ThrowsArgumentException()
     {
         var p = new Person("Mario", "Rossi", 40);
-        var ex = Record.Exception(() => p.GetPropertyByName("Nope"));
-        Assert.IsNotType<NullReferenceException>(ex);
+        var ex = Assert.Throws<ArgumentException>(() => p.GetPropertyByName("Nope"));
+        Assert.Equal("property", ex.ParamName);
     }
+
+    [Fact]
+    public void GetPropertiesToString_SingleProperty_IsTrimmed()
+    {
+        var p = new Person("Mario", "Rossi", 40);
+        Assert.Equal("Mario", p.GetPropertiesToString(" FirstName "));
+    }
+
+    private record WithNullable(string? Name);
+
+    [Fact]
+    public void GetPropertiesToString_SingleNullProperty_ReturnsEmpty() =>
+        Assert.Equal("", new WithNullable(null).GetPropertiesToString("Name"));
 }
