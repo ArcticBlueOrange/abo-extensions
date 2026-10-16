@@ -79,11 +79,12 @@ public class TestIpExtensions
     public void IsValidIpV4_NotAStandardIpV4_ReturnsFalse(string input) =>
         Assert.False(input.IsValidIpV4());
 
-    [Fact]
-    public void IsValidIp_SingleNumber_IsNotValidIpV4NorIpV6()
-    {
-        Assert.True("1".IsValidIp());
-        Assert.True("1".IsValidIpV4() || "1".IsValidIpV6(),
-            "IsValidIp accepts \"1\" but neither IsValidIpV4 nor IsValidIpV6 does");
-    }
+    [Theory]
+    [InlineData("1")]
+    [InlineData("127.1")]
+    [InlineData("[::1]:80")]
+    [InlineData("192.168.1.1")]
+    [InlineData("::1")]
+    public void IsValidIp_IsConsistentWithIpV4OrIpV6(string input) =>
+        Assert.Equal(input.IsValidIpV4() || input.IsValidIpV6(), input.IsValidIp());
 }

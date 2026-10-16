@@ -102,7 +102,7 @@ public static class StringExtensions
     {
         if (string.IsNullOrEmpty(s))
             return s;
-        if (max < 4 && s.Length > 3)
+        if (max < 4 && s.Length > max)
             return "...";
         return s.Length <= max ? s : s[..(max - 3)] + "...";
     }

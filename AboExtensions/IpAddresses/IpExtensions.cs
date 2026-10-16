@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Sockets;
 
 namespace AboExtensions.IpAddresses;
 
@@ -6,19 +7,15 @@ public static class IpExtensions
 {
     public static bool IsValidIp(this string s) => IPAddress.TryParse(s, out _);
 
-    public static bool IsValidIpV4(this string s)
-    {
-        var ok = IPAddress.TryParse(s, out _);
-        ok &= s.Contains('.');
-        return ok;
-    }
+    public static bool IsValidIpV4(this string s) =>
+        IPAddress.TryParse(s, out var ip)
+        && ip.AddressFamily == AddressFamily.InterNetwork
+        && ip.ToString() == s;
 
-    public static bool IsValidIpV6(this string s)
-    {
-        var ok = IPAddress.TryParse(s, out _);
-        ok &= s.Contains(':');
-        return ok;
-    }
+    public static bool IsValidIpV6(this string s) =>
+        IPAddress.TryParse(s, out var ip)
+        && ip.AddressFamily == AddressFamily.InterNetworkV6
+        && !s.Contains('[');
 
     // TODO: IsPrivateIp(this string s) : bool
     //   Descrizione: true se l'IP è in un range privato (RFC 1918 per IPv4):
